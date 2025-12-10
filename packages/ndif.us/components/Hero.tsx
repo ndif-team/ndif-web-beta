@@ -36,7 +36,7 @@ export default function Hero() {
             href="#research"
             className="px-8 py-4 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium text-lg hover:bg-white dark:hover:bg-slate-800 transition-all hover:-translate-y-1"
           >
-            Read the Research
+            Featured Research
           </Link>
         </div>
       </div>

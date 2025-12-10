@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useSettings } from "./SettingsProvider";
 import { FiSun, FiMoon, FiPlay, FiPause } from "react-icons/fi";
@@ -9,6 +10,7 @@ import { FiSun, FiMoon, FiPlay, FiPause } from "react-icons/fi";
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const { isAnimationEnabled, toggleAnimation } = useSettings();
   const [mounted, setMounted] = useState(false);
@@ -26,6 +28,19 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const isActive = (href: string) => {
+    return pathname === href;
+  };
+
+  const navLinkClass = (href: string) => {
+    const baseClass = "text-sm font-medium transition-colors pb-1";
+    const textClass = "text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white";
+    const activeClass = isActive(href)
+      ? "text-brand-600 dark:text-brand-400 border-b-4 border-brand-600 dark:border-brand-400"
+      : textClass;
+    return `${baseClass} ${activeClass}`;
+  };
 
   return (
     <nav
@@ -57,32 +72,32 @@ export default function Header() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
-              href="#about"
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors"
+              href="/about"
+              className={navLinkClass("/about")}
             >
               About
             </Link>
             <Link
-              href="#research"
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors"
+              href="/research"
+              className={navLinkClass("/research")}
             >
               Research
             </Link>
             <Link
-              href="#team"
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors"
+              href="/team"
+              className={navLinkClass("/team")}
             >
               Team
             </Link>
             <Link
-              href="#status"
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors"
+              href="/status"
+              className={navLinkClass("/status")}
             >
               Status
             </Link>
             <Link
-              href="#nnsight"
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors"
+              href="/nnsight"
+              className={navLinkClass("/nnsight")}
             >
               NNsight
             </Link>
@@ -109,7 +124,7 @@ export default function Header() {
             </div>
 
             <a
-              href="#start"
+              href="/get-started"
               className="px-5 py-2.5 rounded-full bg-slate-900 dark:bg-slate-800 border border-slate-700 hover:border-brand-500 text-sm font-medium text-white transition-all hover:bg-slate-700"
             >
               Get Started
@@ -159,20 +174,28 @@ export default function Header() {
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link
-            href="#mission"
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            href="/mission"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+              isActive("/mission")
+                ? "text-brand-600 dark:text-brand-400 bg-slate-100 dark:bg-slate-800/70"
+                : "text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            }`}
           >
             Mission
           </Link>
           <Link
-            href="#research"
+            href="/#research"
             className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
           >
             Research
           </Link>
           <Link
-            href="#community"
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            href="/community"
+            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+              isActive("/community")
+                ? "text-brand-600 dark:text-brand-400 bg-slate-100 dark:bg-slate-800/70"
+                : "text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            }`}
           >
             Community
           </Link>
