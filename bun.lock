@@ -4,10 +4,6 @@
   "workspaces": {
     "": {
       "name": "ndif-website",
-      "dependencies": {
-        "@types/three": "^0.181.0",
-        "three": "^0.181.2",
-      },
     },
     "packages/ndif.us": {
       "name": "nextjs-saas-starter-template",

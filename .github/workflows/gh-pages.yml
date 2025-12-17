@@ -46,13 +46,16 @@ jobs:
           static_site_generator: next
       - uses: oven-sh/setup-bun@v2
       - run: bun install
+      - name: Use production config
+        run: cp next.config.production.js next.config.js
+        working-directory: ./packages/ndif.us
       - run: bun run build
         working-directory: ./packages/ndif.us
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./packages/ndif.us/out
-    
+
   # Deployment job
   deploy:
     environment:
