@@ -1,19 +1,12 @@
 import Header from "components/Header";
 import PlaceholderPageLayout from "components/PlaceholderPageLayout";
 import Footer from "components/Footer";
-import phonePic from "assets/products/phone.png";
-import Image from "next/image";
 
 export default function TeamPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 pt-24">
-        <Image
-          src={phonePic}
-          alt="Phone product"
-          priority
-        />
         <PlaceholderPageLayout
           id="team"
           title="Team & Leadership"

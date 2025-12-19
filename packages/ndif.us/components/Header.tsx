@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useSettings } from "./SettingsProvider";
 import { FiSun, FiMoon, FiPlay, FiPause } from "react-icons/fi";
+import ndifLogo from "assets/NSF_NDIF_Lockup.png";
+import Image from "next/image";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -56,17 +58,27 @@ export default function Header() {
           <div
             className="flex-shrink-0 flex items-center gap-3 cursor-pointer"
             onClick={() => window.scrollTo(0, 0)}
-          >
-            <img
-              src="https://ndif.us/images/NSF_NDIF_color.png"
-              height={45}
-              width={80}
-              alt="NDIF Logo"
-              className="h-10 w-auto"
-            />
-            <span className="font-display font-bold text-xl tracking-tight text-slate-900 dark:text-white hidden md:inline">
-              National Deep Inference Fabric
-            </span>
+          >            
+            <Link
+              href="/"
+            >
+              <Image
+                src={ndifLogo}
+                height={45}
+                width={80}
+                alt="NDIF Logo"
+                priority
+              />
+            </Link>
+
+            <Link
+              href="/"
+            >            
+              <span className="font-display font-bold text-xl tracking-tight text-slate-900 dark:text-white hidden md:inline">
+                NSF National Deep Inference Fabric
+              </span>
+            </Link>
+
           </div>
 
           {/* Desktop Menu */}

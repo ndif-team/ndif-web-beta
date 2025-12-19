@@ -1,6 +1,7 @@
 import Header from "components/Header";
 import Hero from "components/Hero";
-import Mission from "components/Mission";
+import ModelCards from "components/ModelCards";
+import Features from "components/Features";
 import WhatWeDoCards from "components/WhatWeDoCards";
 import Research from "components/Research";
 import Footer from "components/Footer";
@@ -11,7 +12,7 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
-        <Mission />
+        <ModelCards/>
         <WhatWeDoCards />
         <Research />
       </main>
