@@ -24,6 +24,9 @@
       "components/*": [
         "components/*"
       ],
+      "data/*": [
+        "data/*"
+      ],
       "styles/*": [
         "styles/*"
       ]
