@@ -1,8 +1,12 @@
 import Header from "components/Header";
 import Hero from "components/Hero";
+import SupportedBy from "components/SupportedBy";
+import Stats from "components/Stats";
+import WhatIsNDIF from "components/WhatIsNDIF";
 import ModelCards from "components/ModelCards";
-import WhatWeDoCards from "components/WhatWeDoCards";
-import Research from "components/Research";
+import FeaturedResearch from "components/FeaturedResearch";
+import GetStarted from "components/GetStarted";
+import CommunityCTA from "components/CommunityCTA";
 import Footer from "components/Footer";
 
 export default function Page() {
@@ -11,9 +15,13 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
+        <SupportedBy />
+        <Stats />
+        <WhatIsNDIF />
         <ModelCards />
-        <WhatWeDoCards />
-        <Research />
+        <FeaturedResearch />
+        <GetStarted />
+        <CommunityCTA />
       </main>
       <Footer />
     </div>

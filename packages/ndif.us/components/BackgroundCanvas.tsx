@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
 import { useSettings } from "./SettingsProvider";
 import { useTheme } from "next-themes";
@@ -8,21 +8,43 @@ import { useTheme } from "next-themes";
 export default function BackgroundCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { isAnimationEnabled } = useSettings();
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
+
+  const sceneRef = useRef<{
+    scene: THREE.Scene;
+    renderer: THREE.WebGLRenderer;
+    camera: THREE.PerspectiveCamera;
+    particles: THREE.Points;
+    particles2: THREE.Points;
+    plane: THREE.Mesh;
+    animationId: number;
+    time: number;
+    count: number;
+  } | null>(null);
+
+  const updateThemeColors = useCallback((isDark: boolean) => {
+    const s = sceneRef.current;
+    if (!s) return;
+    const bgColor = isDark ? 0x020617 : 0xffffff;
+    (s.scene.fog as THREE.FogExp2).color.setHex(bgColor);
+    const planeMat = s.plane.material as THREE.MeshBasicMaterial;
+    planeMat.color.setHex(isDark ? 0x0f172a : 0xe2e8f0);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const scene = new THREE.Scene();
 
-    // Fog to blend particles into the background
-    // Adjust fog color based on theme (approximate, as theme might change)
-    // For simplicity, we'll stick to a dark fog or update it if we can.
-    // Since we can't easily update the scene on theme change without full re-init,
-    // let's try to make it work for both or re-init on theme change.
-    const isDark = theme === 'dark' || theme === 'system'; // Simplified check
+    if (sceneRef.current) {
+      updateThemeColors(resolvedTheme === "dark");
+      return;
+    }
+
+    const isDark = resolvedTheme === "dark";
     const bgColor = isDark ? 0x020617 : 0xffffff;
+
+    const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(bgColor, 0.001);
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -31,41 +53,35 @@ export default function BackgroundCanvas() {
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create particles to represent the "Fabric"
-    const geometry = new THREE.BufferGeometry();
     const count = 1500;
+    const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const scales = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      // Create a wavelike distribution
       const x = (Math.random() - 0.5) * 150;
       const z = (Math.random() - 0.5) * 100;
       const y = Math.sin(x * 0.1) * 5 + (Math.random() - 0.5) * 10;
-
       positions[i * 3] = x;
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;
-
       scales[i] = Math.random();
     }
 
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("scale", new THREE.BufferAttribute(scales, 1));
 
-    // Custom shader material for glowing dots
     const material = new THREE.PointsMaterial({
-      color: 0x38bdf8, // Sky blue brand color
+      color: 0x38bdf8,
       size: 0.4,
       transparent: true,
       opacity: 0.8,
       sizeAttenuation: true,
     });
 
-    // Add a secondary color system (Purple accents)
     const geometry2 = new THREE.BufferGeometry();
     const count2 = 500;
     const positions2 = new Float32Array(count2 * 3);
@@ -76,7 +92,7 @@ export default function BackgroundCanvas() {
     }
     geometry2.setAttribute("position", new THREE.BufferAttribute(positions2, 3));
     const material2 = new THREE.PointsMaterial({
-      color: 0x8b5cf6, // Violet accent
+      color: 0x8b5cf6,
       size: 0.5,
       transparent: true,
       opacity: 0.6,
@@ -85,11 +101,9 @@ export default function BackgroundCanvas() {
 
     const particles = new THREE.Points(geometry, material);
     const particles2 = new THREE.Points(geometry2, material2);
-
     scene.add(particles);
     scene.add(particles2);
 
-    // Lines connecting particles (simplified for performance)
     const planeGeo = new THREE.PlaneGeometry(200, 200, 40, 40);
     const planeMat = new THREE.MeshBasicMaterial({
       color: isDark ? 0x0f172a : 0xe2e8f0,
@@ -102,55 +116,33 @@ export default function BackgroundCanvas() {
     plane.position.y = -10;
     scene.add(plane);
 
-    // Animation Loop
-    let time = 0;
-    let animationId: number;
+    const state = {
+      scene,
+      renderer,
+      camera,
+      particles,
+      particles2,
+      plane,
+      animationId: 0,
+      time: 0,
+      count,
+    };
+    sceneRef.current = state;
 
-    function animate() {
-      animationId = requestAnimationFrame(animate);
-      
-      if (isAnimationEnabled) {
-        time += 0.001;
-
-        // Rotate particle systems slightly
-        particles.rotation.y = time * 0.5;
-        particles2.rotation.y = time * 0.3;
-
-        // Waving motion for the main particle field
-        const positions = particles.geometry.attributes.position.array as Float32Array;
-        for (let i = 0; i < count; i++) {
-          const x = positions[i * 3];
-          // Sine wave based on x position and time
-          positions[i * 3 + 1] += Math.sin(x * 0.1 + time * 10) * 0.02;
-        }
-        particles.geometry.attributes.position.needsUpdate = true;
-
-        // Subtle camera movement
-        camera.position.x = Math.sin(time) * 2;
-        camera.lookAt(0, 0, 0);
-      }
-
-      renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Handle Resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationId);
-      if (container && renderer.domElement) {
+      cancelAnimationFrame(state.animationId);
+      sceneRef.current = null;
+      if (container && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
       }
-      // Clean up Three.js resources if needed
       geometry.dispose();
       material.dispose();
       geometry2.dispose();
@@ -159,7 +151,54 @@ export default function BackgroundCanvas() {
       planeMat.dispose();
       renderer.dispose();
     };
-  }, [isAnimationEnabled, theme]); // Re-run when theme or animation state changes
+    // Only run once on mount, theme changes handled separately
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    updateThemeColors(resolvedTheme === "dark");
+  }, [resolvedTheme, updateThemeColors]);
+
+  useEffect(() => {
+    const s = sceneRef.current;
+    if (!s) return;
+
+    let running = true;
+
+    function animate() {
+      if (!running || !sceneRef.current) return;
+      sceneRef.current.animationId = requestAnimationFrame(animate);
+
+      if (isAnimationEnabled) {
+        sceneRef.current.time += 0.001;
+        const t = sceneRef.current.time;
+
+        sceneRef.current.particles.rotation.y = t * 0.5;
+        sceneRef.current.particles2.rotation.y = t * 0.3;
+
+        const pos = sceneRef.current.particles.geometry.attributes.position.array as Float32Array;
+        for (let i = 0; i < sceneRef.current.count; i++) {
+          const x = pos[i * 3];
+          pos[i * 3 + 1] += Math.sin(x * 0.1 + t * 10) * 0.02;
+        }
+        sceneRef.current.particles.geometry.attributes.position.needsUpdate = true;
+
+        sceneRef.current.camera.position.x = Math.sin(t) * 2;
+        sceneRef.current.camera.lookAt(0, 0, 0);
+      }
+
+      sceneRef.current.renderer.render(sceneRef.current.scene, sceneRef.current.camera);
+    }
+
+    animate();
+
+    return () => {
+      running = false;
+      if (sceneRef.current) {
+        cancelAnimationFrame(sceneRef.current.animationId);
+      }
+    };
+  }, [isAnimationEnabled]);
 
   return <div id="canvas-container" ref={containerRef} />;
 }
