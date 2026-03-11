@@ -5,6 +5,7 @@ import Image from "next/image";
 import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScroll";
 import { team } from "data/team";
 import { FiExternalLink, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { getAssetPath } from "../lib/assetPath";
 
 function TeamCard({ member }: { member: (typeof team)[number] }) {
   const [expanded, setExpanded] = useState(false);
@@ -13,7 +14,7 @@ function TeamCard({ member }: { member: (typeof team)[number] }) {
     <div className="rounded-2xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 overflow-hidden hover:border-brand-400 dark:hover:border-brand-500/50 transition-all hover:shadow-lg group">
       <div className="relative aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-800">
         <Image
-          src={member.image}
+          src={getAssetPath(member.image)}
           alt={member.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"

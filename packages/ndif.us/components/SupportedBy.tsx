@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScroll";
 import { supporters } from "data/partners";
+import { getAssetPath } from "../lib/assetPath";
 
 export default function SupportedBy() {
   return (
@@ -27,7 +28,7 @@ export default function SupportedBy() {
                 title={s.name}
               >
                 <Image
-                  src={s.logo}
+                  src={getAssetPath(s.logo)}
                   alt={s.name}
                   width={120}
                   height={48}

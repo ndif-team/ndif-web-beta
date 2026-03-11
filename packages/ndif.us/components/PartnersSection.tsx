@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScroll";
 import { partners } from "data/partners";
+import { getAssetPath } from "../lib/assetPath";
 
 export default function PartnersSection() {
   return (
@@ -29,7 +30,7 @@ export default function PartnersSection() {
               >
                 <div className="flex-shrink-0 w-20 h-20 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center p-3">
                   <Image
-                    src={partner.logo}
+                    src={getAssetPath(partner.logo)}
                     alt={partner.name}
                     width={64}
                     height={64}

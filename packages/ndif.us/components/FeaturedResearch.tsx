@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScroll";
 import { researchPapers } from "data/research-papers";
+import { getAssetPath } from "../lib/assetPath";
 
 const featured = researchPapers
   .filter((p) => p.category === "using" && p.image)
@@ -43,7 +44,7 @@ export default function FeaturedResearch() {
                 {paper.image && (
                   <div className="relative aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800">
                     <Image
-                      src={paper.image}
+                      src={getAssetPath(paper.image)}
                       alt={paper.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
