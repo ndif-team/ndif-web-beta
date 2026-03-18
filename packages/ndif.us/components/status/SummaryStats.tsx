@@ -65,17 +65,18 @@ export default function SummaryStats({
         label="Models"
         color="text-slate-600 dark:text-slate-300"
       />
-      <Stat
-        value={hot}
-        label="Hot"
-        color="text-status-hot"
-      />
-      {monitor && (
+      {monitor ? (
         <>
           <Stat value={ok} label="OK" color="text-status-success" />
           <Stat value={slow} label="Slow" color="text-status-warning" />
           <Stat value={failed} label="Failed" color="text-status-danger" />
         </>
+      ) : (
+        <Stat
+          value={hot}
+          label="Hot"
+          color="text-status-hot"
+        />
       )}
     </div>
   );

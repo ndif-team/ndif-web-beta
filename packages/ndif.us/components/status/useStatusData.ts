@@ -99,6 +99,28 @@ function withTimeout(url: string, ms: number): Promise<Response> {
   return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
 }
 
+async function fetchMonitorData(): Promise<MonitorData | null> {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const candidates = [
+    "/api/monitor",
+    `${basePath}/data/monitor-status.json`,
+    "/data/monitor-status.json",
+  ];
+
+  for (const url of candidates) {
+    try {
+      const res = await withTimeout(url, 12_000);
+      if (res.ok) {
+        return (await res.json()) as MonitorData;
+      }
+    } catch {
+      // Try next candidate
+    }
+  }
+
+  return null;
+}
+
 export function useStatusData(): StatusData {
   const [health, setHealth] = useState<SystemHealth>("connecting");
   const [models, setModels] = useState<CombinedModel[]>([]);
@@ -120,9 +142,9 @@ export function useStatusData(): StatusData {
       const pingRes = await withTimeout("https://api.ndif.us/ping", 10_000);
       if (!pingRes.ok) throw new Error("API unreachable");
 
-      const [statusRes, monitorRes] = await Promise.allSettled([
+      const [statusRes, monitorDataResult] = await Promise.allSettled([
         withTimeout("https://api.ndif.us/status", 15_000),
-        withTimeout("/api/monitor", 12_000),
+        fetchMonitorData(),
       ]);
 
       if (statusRes.status === "rejected" || !statusRes.value.ok) {
@@ -132,12 +154,8 @@ export function useStatusData(): StatusData {
       const data: StatusResponse = await statusRes.value.json();
 
       let monitorData: MonitorData | null = null;
-      if (monitorRes.status === "fulfilled" && monitorRes.value.ok) {
-        try {
-          monitorData = await monitorRes.value.json();
-        } catch {
-          /* monitor data is optional */
-        }
+      if (monitorDataResult.status === "fulfilled") {
+        monitorData = monitorDataResult.value;
       }
       setMonitor(monitorData);
 

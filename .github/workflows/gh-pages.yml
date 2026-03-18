@@ -46,6 +46,10 @@ jobs:
           static_site_generator: next
       - uses: oven-sh/setup-bun@v2
       - run: bun install
+      - name: Cache monitor snapshot for static export
+        run: |
+          mkdir -p ./packages/ndif.us/public/data
+          curl -fsSL "https://baukit.org/p/ndif-monitor/data/status.json" -o "./packages/ndif.us/public/data/monitor-status.json"
       - name: Use production config
         run: cp next.config.production.js next.config.js
         working-directory: ./packages/ndif.us

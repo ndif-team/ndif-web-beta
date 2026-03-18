@@ -42,12 +42,6 @@ const testStatusDot: Record<string, string> = {
   DEGRADED: "bg-orange-500",
 };
 
-const testBadgeColors: Record<string, { bg: string; text: string }> = {
-  OK: { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-400" },
-  SLOW: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-400" },
-  FAILED: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-700 dark:text-red-400" },
-};
-
 function formatParams(n: number): string {
   if (n >= 1e12) return `${(n / 1e12).toFixed(1)}T`;
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
@@ -252,7 +246,6 @@ function ModelCard({ model: m }: { model: CombinedModel }) {
   const schedule = getScheduleLabel(m);
   const pilot = isPilotOnly(m);
   const mon = m.monitor;
-  const testBadge = mon ? testBadgeColors[mon.overall_status] : null;
   const appState = formatAppState(
     typeof m.application_state === "string" ? m.application_state : "UNKNOWN"
   );
@@ -287,13 +280,6 @@ function ModelCard({ model: m }: { model: CombinedModel }) {
           </a>
         </div>
         <div className="flex items-center gap-2 shrink-0 relative">
-          {testBadge && (
-            <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded ${testBadge.bg} ${testBadge.text}`}
-            >
-              {mon!.overall_status}
-            </span>
-          )}
           <NNsightSnippet repoId={m.repo_id} />
         </div>
       </div>
@@ -307,9 +293,11 @@ function ModelCard({ model: m }: { model: CombinedModel }) {
           {m.deployment_level}
         </span>
 
-        <span className={`text-xs font-medium ${appStateColor}`}>
-          {appState}
-        </span>
+        {appState !== "Running" && (
+          <span className={`text-xs font-medium ${appStateColor}`}>
+            {appState}
+          </span>
+        )}
 
         {m.n_params > 0 && (
           <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
@@ -446,7 +434,7 @@ export default function ModelList({
                 className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full transition-colors ${chipStyle}`}
                 aria-pressed={active}
               >
-                {level === "ALL" ? "All" : level}
+                {level}
                 <span className="opacity-70">{counts[level]}</span>
               </button>
             );
