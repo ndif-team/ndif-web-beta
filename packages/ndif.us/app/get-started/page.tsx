@@ -1,18 +1,26 @@
+import type { Metadata } from "next";
 import Header from "components/Header";
-import PlaceholderPageLayout from "components/PlaceholderPageLayout";
 import Footer from "components/Footer";
+import GetStartedHero from "components/get-started/GetStartedHero";
+import GetStartedIntro from "components/get-started/GetStartedIntro";
+import GetStartedSteps from "components/get-started/GetStartedSteps";
+import GetStartedFollow from "components/get-started/GetStartedFollow";
+
+export const metadata: Metadata = {
+  title: "Get Started | NDIF — National Deep Inference Fabric",
+  description:
+    "Get started with NDIF and NNsight — install the library, register for a free API key, access LLM internals remotely, and join the community.",
+};
 
 export default function GetStartedPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 pt-24">
-        <PlaceholderPageLayout
-          id="start"
-          title="Get Started"
-          summary="Outline the initial steps for joining or collaborating with NDIF."
-          details="Add application forms, documentation links, or onboarding checklists here. For now, the section confirms that the primary call-to-action in the header has a real destination."
-        />
+      <main>
+        <GetStartedHero />
+        <GetStartedIntro />
+        <GetStartedSteps />
+        <GetStartedFollow />
       </main>
       <Footer />
     </div>

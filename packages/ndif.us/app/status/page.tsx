@@ -1,18 +1,20 @@
+import type { Metadata } from "next";
 import Header from "components/Header";
-import PlaceholderPageLayout from "components/PlaceholderPageLayout";
 import Footer from "components/Footer";
+import StatusDashboard from "components/status/StatusDashboard";
+
+export const metadata: Metadata = {
+  title: "Status | NDIF — National Deep Inference Fabric",
+  description:
+    "Live status dashboard for the NDIF cluster — view model availability, deployment levels, GPU utilization, and system health in real time.",
+};
 
 export default function StatusPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 pt-24">
-        <PlaceholderPageLayout
-          id="status"
-          title="Program Status"
-          summary="Share current availability, milestones, and infrastructure notes."
-          details="Use this space for uptime summaries, roadmap bullet points, or links to external status dashboards. Because it already sits behind /status, visitors from the header won't encounter a dead end."
-        />
+      <main className="flex-1">
+        <StatusDashboard />
       </main>
       <Footer />
     </div>
