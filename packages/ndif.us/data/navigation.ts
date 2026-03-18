@@ -8,6 +8,7 @@ export const mainNav: NavLink[] = [
   { label: "The Fabric", href: "/fabric" },
   { label: "About", href: "/about" },
   { label: "Research", href: "/research" },
+  { label: "Community", href: "/community" },
   { label: "Status", href: "/status" },
   { label: "NNsight", href: "https://nnsight.net", external: true },
 ];
@@ -23,6 +24,7 @@ export const footerNav = {
     { label: "The Fabric", href: "/fabric" },
     { label: "About", href: "/about" },
     { label: "Research", href: "/research" },
+    { label: "Community", href: "/community" },
     { label: "Status", href: "/status" },
     { label: "Get Started", href: "/get-started" },
   ] as NavLink[],

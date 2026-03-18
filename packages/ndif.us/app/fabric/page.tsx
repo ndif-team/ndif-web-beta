@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Header from "components/Header";
-import PlaceholderPageLayout from "components/PlaceholderPageLayout";
 import Footer from "components/Footer";
+import FabricHero from "components/fabric/FabricHero";
+import FabricParts from "components/fabric/FabricParts";
+import FabricCards from "components/fabric/FabricCards";
+import FabricFAQ from "components/fabric/FabricFAQ";
+import FabricCitation from "components/fabric/FabricCitation";
 
 export const metadata: Metadata = {
   title: "The Fabric | NDIF — National Deep Inference Fabric",
@@ -13,13 +17,12 @@ export default function FabricPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 pt-24">
-        <PlaceholderPageLayout
-          id="fabric"
-          title="The Fabric"
-          summary="NDIF consists of three complementary parts: a nationwide HPC fabric, the NNsight open-source library, and a training program for AI researchers."
-          details="The NDIF computing backbone is DeltaAI, housed at NCSA (University of Illinois Urbana-Champaign) — featuring 320 NVIDIA H100 GPUs delivering over 630 petaflops of compute. NNsight is our open-source PyTorch-based toolkit (850+ GitHub stars) that lets researchers inspect and modify model internals with a single remote=True flag. Our training program, developed with PIT-UN (a consortium of 63 universities), brings workshops and resources to the broader research community."
-        />
+      <main>
+        <FabricHero />
+        <FabricParts />
+        <FabricCards />
+        <FabricFAQ />
+        <FabricCitation />
       </main>
       <Footer />
     </div>

@@ -1,0 +1,28 @@
+"use client";
+
+import AnimateOnScroll from "../AnimateOnScroll";
+
+export default function FabricHero() {
+  return (
+    <section className="pt-28 pb-16 lg:pt-36 lg:pb-20 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimateOnScroll>
+          <div className="text-center mb-8">
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-white">
+              The <span className="text-gradient">Fabric</span>
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full" />
+          </div>
+        </AnimateOnScroll>
+        <AnimateOnScroll delay={0.1}>
+          <p className="max-w-3xl mx-auto text-center text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed">
+            Developed by Northeastern University in partnership with the NSF
+            Delta AI high-performance computing cluster at the NCSA at University
+            of Illinois Urbana-Champaign, NDIF consists of three major
+            components.
+          </p>
+        </AnimateOnScroll>
+      </div>
+    </section>
+  );
+}

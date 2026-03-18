@@ -1,18 +1,28 @@
+import type { Metadata } from "next";
 import Header from "components/Header";
-import PlaceholderPageLayout from "components/PlaceholderPageLayout";
 import Footer from "components/Footer";
+import CommunityHero from "components/community/CommunityHero";
+import CommunityWays from "components/community/CommunityWays";
+import CommunityWorkshop from "components/community/CommunityWorkshop";
+import CommunityCards from "components/community/CommunityCards";
+import CommunityJobs from "components/community/CommunityJobs";
+
+export const metadata: Metadata = {
+  title: "Community | NDIF — National Deep Inference Fabric",
+  description:
+    "Get involved with NDIF — join our Discord community, use NNsight, contribute to open-source, attend workshops, and explore job opportunities.",
+};
 
 export default function CommunityPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 pt-24">
-        <PlaceholderPageLayout
-          id="community"
-          title="Community & Events"
-          summary="Point researchers to gatherings, forums, and collaboration channels."
-          details="List upcoming talks, working groups, or mailing list signups. The placeholder ensures visitors can discover how to engage with the NDIF community."
-        />
+      <main>
+        <CommunityHero />
+        <CommunityWays />
+        <CommunityWorkshop />
+        <CommunityCards />
+        <CommunityJobs />
       </main>
       <Footer />
     </div>
