@@ -38,6 +38,11 @@ export const supporters: Supporter[] = [
     url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2408455",
   },
   {
+    name: "NAIRR",
+    logo: "/images/nairr-pilot-logo.svg",
+    url: "https://nairrpilot.org/",
+  },
+  {
     name: "Northeastern University",
     logo: "/images/northeastern-red-square.png",
     url: "https://www.northeastern.edu/",

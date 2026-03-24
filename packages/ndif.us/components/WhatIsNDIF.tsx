@@ -9,14 +9,14 @@ const pillars = [
     icon: FiCpu,
     title: "HPC Fabric",
     description:
-      "A nationwide high-performance computing fabric powered by NCSA's DeltaAI — 320 NVIDIA H100 GPUs delivering over 630 petaflops — providing free remote access to run experiments on large-scale AI models.",
+      "A nationwide high-performance computing fabric powered by NCSA's DeltaAI — utilizing one 8xH200 node and six 4xA40 nodes — providing free remote access to run experiments on large-scale AI models.",
     color: "brand",
   },
   {
     icon: FiCode,
     title: "NNsight Library",
     description:
-      "An open-source PyTorch-based toolkit (850+ GitHub stars) that lets researchers inspect, modify, and customize AI model computations transparently — with a single remote=True flag.",
+      "An open-source PyTorch-based toolkit (850+ GitHub stars) that lets researchers inspect, modify, and customize internal computations of AI models, complete with remote access to large scale models.",
     color: "accent",
   },
   {

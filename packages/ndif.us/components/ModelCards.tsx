@@ -17,8 +17,7 @@ export default function ModelCards() {
                 Remote Model Access
               </h3>
               <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                Access and inspect open-source model internals remotely through NDIF.
-                Deploy models on-demand with full transparency into their computations.
+                Access and inspect open-source model internals remotely on NDIF with the NNsight API. Deploy models on-demand with full transparency into their computations.
               </p>
               <p className="text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
                 All models are free for research use — no GPU required on your end.

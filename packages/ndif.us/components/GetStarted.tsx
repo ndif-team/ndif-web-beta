@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScroll";
-import { FiCopy, FiCheck } from "react-icons/fi";
+import { FiCopy, FiCheck, FiArrowUpRight } from "react-icons/fi";
 
 const steps = [
   {
@@ -16,7 +16,8 @@ const steps = [
     number: "02",
     title: "Sign Up for Access",
     description: "Create a free account to get remote access to large-scale models hosted on NDIF.",
-    code: "nnsight.net/signup",
+    link: "https://login.ndif.us",
+    linkText: "login.ndif.us",
   },
   {
     number: "03",
@@ -79,7 +80,21 @@ export default function GetStarted() {
                     {step.description}
                   </p>
                   <div className="mt-5">
-                    <CodeBlock code={step.code} />
+                    {step.code ? (
+                      <CodeBlock code={step.code} />
+                    ) : step.link ? (
+                      <a
+                        href={step.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-between rounded-lg bg-slate-200/70 dark:bg-slate-900/80 p-3 font-mono text-sm text-slate-700 dark:text-brand-400 hover:bg-slate-300/70 dark:hover:bg-slate-800/80 transition-all"
+                      >
+                        <span>{step.linkText}</span>
+                        <span className="text-slate-400 opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-slate-600 dark:group-hover:text-brand-300 transition-all duration-300">
+                          <FiArrowUpRight size={16} />
+                        </span>
+                      </a>
+                    ) : null}
                   </div>
                 </div>
               </div>

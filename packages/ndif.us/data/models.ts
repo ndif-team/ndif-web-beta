@@ -32,20 +32,6 @@ export const deploymentLevelMeta: Record<
 
 export const featuredModels: Model[] = [
   {
-    id: "llama-3.1-405b",
-    name: "Llama 3.1 405B",
-    repoId: "meta-llama/Meta-Llama-3.1-405B",
-    parameters: "405B",
-    level: "warm",
-  },
-  {
-    id: "deepseek-r1",
-    name: "DeepSeek R1",
-    repoId: "deepseek-ai/DeepSeek-R1",
-    parameters: "671B",
-    level: "warm",
-  },
-  {
     id: "llama-3.1-70b",
     name: "Llama 3.1 70B",
     repoId: "meta-llama/Meta-Llama-3.1-70B",
@@ -58,5 +44,19 @@ export const featuredModels: Model[] = [
     repoId: "meta-llama/Meta-Llama-3.1-8B",
     parameters: "8B",
     level: "hot",
+  },
+  {
+    id: "llama-3.1-405b",
+    name: "Llama 3.1 405B",
+    repoId: "meta-llama/Meta-Llama-3.1-405B",
+    parameters: "405B",
+    level: "warm",
+  },
+  {
+    id: "deepseek-r1",
+    name: "DeepSeek R1",
+    repoId: "deepseek-ai/DeepSeek-R1",
+    parameters: "671B",
+    level: "warm",
   },
 ];

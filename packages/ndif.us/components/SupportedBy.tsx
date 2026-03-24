@@ -32,7 +32,15 @@ export default function SupportedBy() {
                   alt={s.name}
                   width={120}
                   height={48}
-                  className="h-10 md:h-12 w-auto object-contain"
+                  className={`w-auto object-contain transition-all duration-300 ${
+                    s.name === "National Science Foundation"
+                      ? "h-14 md:h-16"
+                      : s.name === "PIT-UN"
+                      ? "h-7 md:h-9"
+                      : s.name === "NAIRR"
+                      ? "h-6 md:h-8"
+                      : "h-10 md:h-12"
+                  }`}
                 />
               </a>
             </StaggerItem>

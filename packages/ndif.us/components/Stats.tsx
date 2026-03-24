@@ -64,7 +64,7 @@ const stats: StatProps[] = [
   { value: "63+", numericValue: 63, label: "Research Institutions", suffix: "+" },
   { value: "127+", numericValue: 127, label: "Research Citations", suffix: "+" },
   { value: "850+", numericValue: 850, label: "GitHub Stars", suffix: "+" },
-  { value: "320", numericValue: 320, label: "H100 GPUs", prefix: "" },
+  { value: "32", numericValue: 32, label: "GPUs", prefix: "" },
 ];
 
 export default function Stats() {
