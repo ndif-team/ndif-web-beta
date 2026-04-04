@@ -17,7 +17,7 @@ export default function FabricHero() {
         <AnimateOnScroll delay={0.1}>
           <p className="max-w-3xl mx-auto text-center text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed">
             Developed by Northeastern University in partnership with the NSF
-            Delta AI high-performance computing cluster at the NCSA at University
+            Delta high-performance computing cluster at the NCSA at University
             of Illinois Urbana-Champaign, NDIF consists of three major
             components.
           </p>

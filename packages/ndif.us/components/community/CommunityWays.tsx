@@ -10,7 +10,7 @@ const ways = [
     title: "Join our community of early adopters",
     description:
       "Our Discord server hosts students and researchers from many fields who are dissecting the behavior and mechanisms of large AI models.",
-    href: "https://nnsight.net/signup",
+    href: "https://discord.com/invite/6uFJmCSwW7",
     cta: "Join the community",
     external: true,
   },

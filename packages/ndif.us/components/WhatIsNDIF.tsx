@@ -9,7 +9,7 @@ const pillars = [
     icon: FiCpu,
     title: "HPC Fabric",
     description:
-      "A nationwide high-performance computing fabric powered by NCSA's DeltaAI — utilizing one 8xH200 node and six 4xA40 nodes — providing free remote access to run experiments on large-scale AI models.",
+      "A nationwide high-performance computing fabric powered by NCSA's Delta — utilizing one 8xH200 node and six 4xA40 nodes — providing free remote access to run experiments on large-scale AI models.",
     color: "brand",
   },
   {

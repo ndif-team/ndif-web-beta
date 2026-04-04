@@ -29,7 +29,7 @@ export const footerNav = {
     { label: "Get Started", href: "/get-started" },
   ] as NavLink[],
   connect: [
-    { label: "Discord", href: "https://nnsight.net/signup", external: true },
+    { label: "Discord", href: "https://discord.com/invite/6uFJmCSwW7", external: true },
     { label: "GitHub", href: "https://github.com/ndif-team", external: true },
     { label: "Twitter / X", href: "https://x.com/ndif_team", external: true },
     { label: "Bluesky", href: "https://bsky.app/profile/ndif-team.bsky.social", external: true },
@@ -48,6 +48,6 @@ export const socialLinks = {
   twitter: "https://x.com/ndif_team",
   bluesky: "https://bsky.app/profile/ndif-team.bsky.social",
   linkedin: "https://www.linkedin.com/company/national-deep-inference-fabric",
-  discord: "https://nnsight.net/signup",
+  discord: "https://discord.com/invite/6uFJmCSwW7",
   email: "info@ndif.us",
 };

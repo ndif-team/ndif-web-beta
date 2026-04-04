@@ -159,22 +159,6 @@ export default function GetStartedSteps() {
             </Link>
             .
           </p>
-          <div className="card-glass rounded-xl p-4 text-sm">
-            <p>
-              <strong className="text-slate-900 dark:text-white">
-                405B Pilot Program:
-              </strong>{" "}
-              Access to Llama-3.1-405B requires a separate application. If you
-              have a clear research need, learn more about our{" "}
-              <Link
-                href="/community"
-                className="text-brand-600 dark:text-brand-400 hover:underline underline-offset-4 font-medium"
-              >
-                pilot program
-              </Link>
-              .
-            </p>
-          </div>
         </StepSection>
 
         {/* Step 3 */}

@@ -7,7 +7,7 @@ export const faq: FAQItem[] = [
   {
     question: "When can I use NDIF?",
     answer:
-      "You can start using NDIF today! NDIF is a four-year project running from 2024–2028, with many capabilities still to be developed, but an early version of NDIF is available for you to use today. Your participation is an essential part of the project—by getting involved early, you get a jump start on using leading-edge AI research methods, and you can help the NDIF team learn how to design the Fabric to be helpful for your research.",
+      "NDIF is available for you to use today. Get started here: https://ndif-team.github.io/ndif-web-beta/get-started",
   },
   {
     question: "How does NDIF compare to commercial AI inference services?",
@@ -30,9 +30,14 @@ export const faq: FAQItem[] = [
       "NDIF's API, NNsight, is built on PyTorch, so it will be familiar to any PyTorch user. However, NNsight defines Python contexts where models can be run with interventions that are defined locally but executed either locally or remotely. This enables a workflow where you develop methods at small scale locally and then deploy the same code at large scale on NDIF.",
   },
   {
-    question: "Who will be able to use NDIF?",
+    question: "Who can use NDIF?",
     answer:
-      "NNsight, the open-source software underlying NDIF, is available worldwide and can be used with your own hardware. The NSF-funded computing resources will be available to educational and research users with a U.S. affiliation after account creation via CILogin. There will eventually be a way to allocate high-capacity blocks for very large-scale projects.",
+      "NNsight, the open-source software underlying NDIF, is available worldwide and can be used with your own hardware. The NSF-funded computing resources will be available to educational and research users with a U.S. affiliation or collaborator after account creation via CILogin.",
+  },
+  {
+    question: "Do I need to know how to code?",
+    answer:
+      "If you’d prefer to access NDIF resources without coding, check out Workbench, our web app! You can run experiments on NDIF models remotely, all from a browser. Try it today: https://workbench.ndif.us/",
   },
   {
     question: "Are you hiring?",

@@ -62,6 +62,13 @@ export const team: TeamMember[] = [
     bio: "Contributes to NDIF's backend engineering efforts. He completed a BS at Carleton University in Mathematics and Computer Science.",
   },
   {
+    name: "Gabriele Sarti",
+    role: "Postdoctoral Research Associate",
+    image: "/images/Gabriele-Sarti.jpg",
+    url: "https://gsarti.com/",
+    bio: "Postdoctoral Research Associate at Northeastern University's Khoury College of Computer Sciences and a member of the BauLab. His research focuses on Natural Language Processing (NLP), deep learning interpretability, and human-AI interaction, with a goal of making the inner workings of large language models more transparent and trustworthy.",
+  },
+  {
     name: "Adam Belfki",
     role: "Research Software Engineer",
     image: "/images/adam.jpg",

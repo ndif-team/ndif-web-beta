@@ -97,7 +97,7 @@ export default function ResearchPaperList() {
         <AnimateOnScroll>
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
-              Research Citing NDIF
+              Research Using NDIF
             </h2>
             <p className="max-w-2xl mx-auto text-slate-600 dark:text-slate-400">
               {researchPapers.length} papers across top venues including ICLR,

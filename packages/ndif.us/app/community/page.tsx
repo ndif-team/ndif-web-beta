@@ -21,7 +21,6 @@ export default function CommunityPage() {
         <CommunityHero />
         <CommunityWays />
         <CommunityWorkshop />
-        <CommunityCards />
         <CommunityJobs />
       </main>
       <Footer />

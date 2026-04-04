@@ -11,11 +11,6 @@ interface JobItem {
 
 const jobs: JobItem[] = [
   {
-    title: "Join our Pilot Program",
-    content:
-      "As we continue building our platform, we are offering a unique opportunity for AI researchers to conduct groundbreaking experiments on the Llama-3.1-405b model while helping to test new research infrastructure. We are pilot-testing a programming interface that provides terabytes of GPU resources and the system support necessary to conduct experiments on models of this size. We are seeking innovative minds to help us test our new computational fabric while advancing their research in AI.",
-  },
-  {
     title: "Other roles",
     content:
       "We anticipate hiring for the following roles in the future: Student research assistants and Student co-ops. We also welcome research collaborators and unpaid open-source contributors; for open-source community opportunities, get in touch through our community Discord.",
