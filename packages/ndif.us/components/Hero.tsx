@@ -33,11 +33,14 @@ export default function Hero() {
         </AnimateOnScroll>
 
         <AnimateOnScroll variant="fadeUp" duration={0.6} delay={0.25}>
-          <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-            The NSF National Deep Inference Fabric provides free remote access to
-            large-scale AI models, enabling researchers and students to perform
-            transparent, reproducible experiments on model internals.
-          </p>
+          <div className="relative max-w-2xl mx-auto">
+            <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm rounded-2xl -mx-4 -my-2 border border-white/20 dark:border-slate-800/20" />
+            <p className="relative z-10 mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed px-2 py-2">
+              The NSF National Deep Inference Fabric provides free remote access to
+              large-scale AI models, enabling researchers and students to perform
+              transparent, reproducible experiments on model internals.
+            </p>
+          </div>
         </AnimateOnScroll>
 
         <AnimateOnScroll variant="fadeUp" duration={0.5} delay={0.4}>

@@ -16,7 +16,7 @@ const channels = [
   },
   {
     icon: FiCalendar,
-    title: "Workshops & Events",
+    title: "Training & Workshops",
     description: "Attend hands-on workshops and tutorials to learn how to use NDIF for your research.",
     href: "/community",
     cta: "See Events",

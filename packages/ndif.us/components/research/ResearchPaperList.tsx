@@ -9,14 +9,15 @@ import { getAssetPath } from "../../lib/assetPath";
 
 type FilterCategory = "all" | "using" | "referencing";
 
-const venues = Array.from(
-  new Set(researchPapers.map((p) => extractVenueShort(p.venue)))
-).sort();
-
 function extractVenueShort(venue: string): string {
   const match = venue.match(/^([\w-]+)/);
   return match ? match[1] : venue;
 }
+
+// Static venue list derived once from ALL papers — never changes with filters.
+const venues = Array.from(
+  new Set(researchPapers.map((p) => extractVenueShort(p.venue)))
+).sort();
 
 function PaperCard({ paper }: { paper: ResearchPaper }) {
   return (
@@ -49,7 +50,7 @@ function PaperCard({ paper }: { paper: ResearchPaper }) {
                 : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
             }`}
           >
-            {paper.category === "using" ? "Used infrastructure" : "References NDIF"}
+            {paper.category === "using" ? "Used NNsight" : "References NDIF"}
           </span>
         </div>
         <h3 className="font-semibold text-slate-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
@@ -75,7 +76,7 @@ export default function ResearchPaperList() {
     const q = search.toLowerCase();
     return researchPapers.filter((p) => {
       if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
-      if (venueFilter !== "all" && !extractVenueShort(p.venue).includes(venueFilter))
+      if (venueFilter !== "all" && extractVenueShort(p.venue) !== venueFilter)
         return false;
       if (
         q &&
@@ -88,8 +89,22 @@ export default function ResearchPaperList() {
     });
   }, [search, categoryFilter, venueFilter]);
 
-  const usingCount = researchPapers.filter((p) => p.category === "using").length;
-  const refCount = researchPapers.filter((p) => p.category === "referencing").length;
+  // Dynamic counts — update based on the currently selected venue so users
+  // can see how many papers exist in each category for the active venue.
+  // NOTE: When research-papers.ts is expanded with sub-categories (e.g.
+  // "Used NNsight", "Used remote NDIF"), update these filters accordingly.
+  const scopedPapers = useMemo(() => {
+    if (venueFilter === "all") return researchPapers;
+    return researchPapers.filter((p) => extractVenueShort(p.venue) === venueFilter);
+  }, [venueFilter]);
+
+  const totalCount = scopedPapers.length;
+  const usingCount = scopedPapers.filter((p) => p.category === "using").length;
+  const refCount = scopedPapers.filter((p) => p.category === "referencing").length;
+
+  // A key that changes whenever any filter changes — forces StaggerContainer
+  // to unmount/remount so that framer-motion re-triggers its stagger animation.
+  const resultsKey = `${categoryFilter}-${venueFilter}-${search}`;
 
   return (
     <section className="py-20 border-t border-slate-200 dark:border-slate-800">
@@ -139,17 +154,19 @@ export default function ResearchPaperList() {
                 active={categoryFilter === "all"}
                 onClick={() => setCategoryFilter("all")}
               >
-                All ({researchPapers.length})
+                All ({totalCount})
               </FilterChip>
               <FilterChip
                 active={categoryFilter === "using"}
                 onClick={() => setCategoryFilter("using")}
+                disabled={usingCount === 0}
               >
-                Used infrastructure ({usingCount})
+                Used NNsight ({usingCount})
               </FilterChip>
               <FilterChip
                 active={categoryFilter === "referencing"}
                 onClick={() => setCategoryFilter("referencing")}
+                disabled={refCount === 0}
               >
                 References NDIF ({refCount})
               </FilterChip>
@@ -192,6 +209,7 @@ export default function ResearchPaperList() {
           </div>
         ) : (
           <StaggerContainer
+            key={resultsKey}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             staggerDelay={0.05}
           >
@@ -211,18 +229,23 @@ function FilterChip({
   active,
   onClick,
   children,
+  disabled,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
         active
           ? "bg-brand-600 text-white shadow-sm"
-          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400"
+          : disabled
+            ? "bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed"
+            : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400"
       }`}
     >
       {children}

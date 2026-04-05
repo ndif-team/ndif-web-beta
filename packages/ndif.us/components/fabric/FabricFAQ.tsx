@@ -3,7 +3,26 @@
 import { useState, useCallback } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import AnimateOnScroll from "../AnimateOnScroll";
-import { faq, type FAQItem } from "data/faq";
+import { faq, type FAQItem, type FAQSegment } from "data/faq";
+
+function renderAnswer(segments: FAQSegment[]) {
+  return segments.map((seg, i) => {
+    if (seg.type === "link") {
+      return (
+        <a
+          key={i}
+          href={seg.href}
+          target={seg.href?.startsWith("mailto:") ? undefined : "_blank"}
+          rel={seg.href?.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+          className="text-brand-600 dark:text-brand-400 hover:underline underline-offset-4 font-medium"
+        >
+          {seg.content}
+        </a>
+      );
+    }
+    return <span key={i}>{seg.content}</span>;
+  });
+}
 
 function AccordionItem({
   item,
@@ -39,7 +58,7 @@ function AccordionItem({
         }`}
       >
         <p className="text-slate-600 dark:text-slate-400 leading-relaxed pr-8">
-          {item.answer}
+          {renderAnswer(item.answer)}
         </p>
       </div>
     </div>
@@ -58,20 +77,23 @@ export default function FabricFAQ() {
     <section className="py-20 border-t border-slate-200 dark:border-slate-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-10 text-slate-900 dark:text-white">
-            FAQ
-          </h2>
-        </AnimateOnScroll>
-        <AnimateOnScroll delay={0.1}>
-          <div role="region" aria-label="Frequently Asked Questions">
-            {faq.map((item, i) => (
-              <AccordionItem
-                key={item.question}
-                item={item}
-                isOpen={openIndex === i}
-                onToggle={() => toggle(i)}
-              />
-            ))}
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm rounded-3xl border border-white/20 dark:border-slate-800/20" />
+            <div className="relative z-10 p-8 md:p-10">
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-10 text-slate-900 dark:text-white">
+              FAQ
+            </h2>
+            <div role="region" aria-label="Frequently Asked Questions">
+              {faq.map((item, i) => (
+                <AccordionItem
+                  key={item.question}
+                  item={item}
+                  isOpen={openIndex === i}
+                  onToggle={() => toggle(i)}
+                />
+              ))}
+            </div>
+            </div>
           </div>
         </AnimateOnScroll>
       </div>

@@ -4,7 +4,6 @@ import Footer from "components/Footer";
 import CommunityHero from "components/community/CommunityHero";
 import CommunityWays from "components/community/CommunityWays";
 import CommunityWorkshop from "components/community/CommunityWorkshop";
-import CommunityCards from "components/community/CommunityCards";
 import CommunityJobs from "components/community/CommunityJobs";
 
 export const metadata: Metadata = {

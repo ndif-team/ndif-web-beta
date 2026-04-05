@@ -3,14 +3,13 @@ import Header from "components/Header";
 import Footer from "components/Footer";
 import FabricHero from "components/fabric/FabricHero";
 import FabricParts from "components/fabric/FabricParts";
-import FabricCards from "components/fabric/FabricCards";
 import FabricFAQ from "components/fabric/FabricFAQ";
 import FabricCitation from "components/fabric/FabricCitation";
 
 export const metadata: Metadata = {
   title: "The Fabric | NDIF — National Deep Inference Fabric",
   description:
-    "Learn about the three parts of NDIF: the HPC fabric powered by NCSA's DeltaAI, the NNsight open-source library, and our nationwide training program.",
+    "Learn about the three parts of NDIF: the HPC fabric powered by NCSA's Delta, the NNsight open-source library, and our nationwide training program.",
 };
 
 export default function FabricPage() {
@@ -20,7 +19,6 @@ export default function FabricPage() {
       <main>
         <FabricHero />
         <FabricParts />
-        <FabricCards />
         <FabricFAQ />
         <FabricCitation />
       </main>
