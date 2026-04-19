@@ -7,7 +7,7 @@ import AnimateOnScroll, { StaggerContainer, StaggerItem } from "../AnimateOnScro
 import { researchPapers, type ResearchPaper } from "data/research-papers";
 import { getAssetPath } from "../../lib/assetPath";
 
-type FilterCategory = "all" | "using" | "referencing";
+type FilterCategory = "all" | "used-nnsight" | "used-ndif" | "referencing";
 
 function extractVenueShort(venue: string): string {
   const match = venue.match(/^([\w-]+)/);
@@ -45,12 +45,18 @@ function PaperCard({ paper }: { paper: ResearchPaper }) {
           </span>
           <span
             className={`inline-block px-2 py-0.5 text-2xs font-semibold rounded-full ${
-              paper.category === "using"
+              paper.category === "used-nnsight"
                 ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
+                : paper.category === "used-ndif"
+                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                  : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
             }`}
           >
-            {paper.category === "using" ? "Used NNsight" : "References NDIF"}
+            {paper.category === "used-nnsight"
+              ? "Used NNsight"
+              : paper.category === "used-ndif"
+                ? "Used remote NDIF"
+                : "References NDIF"}
           </span>
         </div>
         <h3 className="font-semibold text-slate-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
@@ -89,17 +95,15 @@ export default function ResearchPaperList() {
     });
   }, [search, categoryFilter, venueFilter]);
 
-  // Dynamic counts — update based on the currently selected venue so users
-  // can see how many papers exist in each category for the active venue.
-  // NOTE: When research-papers.ts is expanded with sub-categories (e.g.
-  // "Used NNsight", "Used remote NDIF"), update these filters accordingly.
+  // Dynamic counts per category for the currently selected venue
   const scopedPapers = useMemo(() => {
     if (venueFilter === "all") return researchPapers;
     return researchPapers.filter((p) => extractVenueShort(p.venue) === venueFilter);
   }, [venueFilter]);
 
   const totalCount = scopedPapers.length;
-  const usingCount = scopedPapers.filter((p) => p.category === "using").length;
+  const nnsightCount = scopedPapers.filter((p) => p.category === "used-nnsight").length;
+  const ndifCount = scopedPapers.filter((p) => p.category === "used-ndif").length;
   const refCount = scopedPapers.filter((p) => p.category === "referencing").length;
 
   // A key that changes whenever any filter changes — forces StaggerContainer
@@ -157,11 +161,18 @@ export default function ResearchPaperList() {
                 All ({totalCount})
               </FilterChip>
               <FilterChip
-                active={categoryFilter === "using"}
-                onClick={() => setCategoryFilter("using")}
-                disabled={usingCount === 0}
+                active={categoryFilter === "used-nnsight"}
+                onClick={() => setCategoryFilter("used-nnsight")}
+                disabled={nnsightCount === 0}
               >
-                Used NNsight ({usingCount})
+                Used NNsight ({nnsightCount})
+              </FilterChip>
+              <FilterChip
+                active={categoryFilter === "used-ndif"}
+                onClick={() => setCategoryFilter("used-ndif")}
+                disabled={ndifCount === 0}
+              >
+                Used remote NDIF ({ndifCount})
               </FilterChip>
               <FilterChip
                 active={categoryFilter === "referencing"}
