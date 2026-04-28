@@ -18,10 +18,10 @@ export default function FeaturedResearch() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white" style={{ textWrap: 'balance' }}>
             Featured Research
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" />
+          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" aria-hidden="true" />
           <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
             Researchers across 63+ institutions use NDIF and NNsight to
             uncover how large-scale AI models work, with 38+ published papers
@@ -58,7 +58,7 @@ export default function FeaturedResearch() {
                       {paper.venue}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                  <h3 className="font-display text-slate-900 dark:text-white leading-snug mb-2 line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" style={{ letterSpacing: '-0.01em' }}>
                     {paper.title}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-1">

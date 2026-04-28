@@ -51,10 +51,10 @@ export default function WhatIsNDIF() {
     <section className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white" style={{ textWrap: 'balance' }}>
             What is NDIF?
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" />
+          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" aria-hidden="true" />
           <p className="max-w-3xl mx-auto text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
             The National Deep Inference Fabric is a unique nationwide research computing
             fabric that enables scientists to perform transparent and reproducible
@@ -68,7 +68,7 @@ export default function WhatIsNDIF() {
             const Icon = pillar.icon;
             return (
               <StaggerItem key={pillar.title}>
-                <div className={`card-glass p-8 rounded-2xl h-full border ${colors.border}`}>
+                <div className={`card-glass p-8 rounded-2xl h-full border focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 focus-visible:outline-none ${colors.border}`}>
                   <div
                     className={`w-14 h-14 rounded-xl ${colors.iconBg} flex items-center justify-center mb-6 ${colors.iconText}`}
                   >

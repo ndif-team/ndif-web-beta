@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -20,6 +20,24 @@ const scaleIn: Variants = {
 
 const variants = { fadeUp, fadeIn, scaleIn };
 
+function useReducedMotion(): boolean {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setReducedMotion(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  return reducedMotion;
+}
+
 export default function AnimateOnScroll({
   children,
   variant = "fadeUp",
@@ -33,6 +51,12 @@ export default function AnimateOnScroll({
   duration?: number;
   className?: string;
 }) {
+  const reducedMotion = useReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -56,6 +80,12 @@ export function StaggerContainer({
   className?: string;
   staggerDelay?: number;
 }) {
+  const reducedMotion = useReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -76,6 +106,12 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
+  const reducedMotion = useReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       variants={fadeUp}

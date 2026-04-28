@@ -25,10 +25,10 @@ export default function Hero() {
         </AnimateOnScroll>
 
         <AnimateOnScroll variant="fadeUp" duration={0.7} delay={0.1}>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.05]">
-            <span className="text-gradient">Cracking open</span>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.05]" style={{ textWrap: 'balance' }}>
+            <span className="text-gradient" style={{ letterSpacing: '-0.02em' }}>Cracking open</span>
             <br />
-            <span className="text-slate-900 dark:text-white">AI&apos;s black box</span>
+            <span className="text-slate-900 dark:text-white" style={{ letterSpacing: '-0.01em' }}>AI&apos;s black box</span>
           </h1>
         </AnimateOnScroll>
 
@@ -47,7 +47,7 @@ export default function Hero() {
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/get-started"
-              className="group relative px-8 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 overflow-hidden"
+              className="group relative px-8 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg shadow-lg hover:shadow-card-hover transition-all hover:-translate-y-0.5 overflow-hidden"
             >
               <span className="relative z-10">Get Started</span>
               <div className="absolute inset-0 bg-gradient-to-r from-brand-600 to-accent-600 dark:from-brand-400 dark:to-accent-400 opacity-0 group-hover:opacity-100 transition-opacity" />

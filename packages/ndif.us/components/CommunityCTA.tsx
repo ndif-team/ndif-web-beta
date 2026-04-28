@@ -8,26 +8,29 @@ import { FiCalendar } from "react-icons/fi";
 const channels = [
   {
     icon: FaDiscord,
-    title: "Join the Community",
-    description: "Connect with researchers, get help, and share your work on our Discord community.",
+    title: "Join the Conversation",
+    description: "Got a question? Stuck on an experiment? Our Discord is where researchers share ideas, get unstuck, and geek out about model internals.",
     href: "https://nnsight.net/signup",
     cta: "Join Discord",
+    valueProp: "1,200+ members",
     external: true,
   },
   {
     icon: FiCalendar,
-    title: "Training & Workshops",
-    description: "Attend hands-on workshops and tutorials to learn how to use NDIF for your research.",
+    title: "Hands-On Workshops",
+    description: "Learn by doing. We run regular workshops that take you from zero to running your first remote experiment on large-scale models.",
     href: "/community",
-    cta: "See Events",
+    cta: "See Upcoming Events",
+    valueProp: "Free for researchers",
     external: false,
   },
   {
     icon: FaGithub,
-    title: "Contribute",
-    description: "NNsight is open source. Contribute code, report issues, or improve the documentation.",
+    title: "Contribute to NNsight",
+    description: "NNsight is open source and built by researchers like you. Whether it's code, documentation, or a bug report—every contribution helps.",
     href: "https://github.com/ndif-team",
-    cta: "View on GitHub",
+    cta: "Explore on GitHub",
+    valueProp: "850+ stars",
     external: true,
   },
 ];
@@ -37,12 +40,13 @@ export default function CommunityCTA() {
     <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-black dark:to-surface-950 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white" style={{ textWrap: 'balance' }}>
             Join the NDIF Community
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" />
+          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" aria-hidden="true" />
           <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400">
-            Be part of a growing network of researchers advancing AI transparency.
+            We'd love to have you. Whether you're debugging your first experiment or
+            contributing to the codebase, there's a place for you here.
           </p>
         </AnimateOnScroll>
 
@@ -51,29 +55,32 @@ export default function CommunityCTA() {
             const Icon = ch.icon;
             return (
               <StaggerItem key={ch.title}>
-                <div className="card-glass p-8 rounded-2xl h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-xl bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center mb-5 text-brand-600 dark:text-brand-400">
+                <div className="card-glass p-8 rounded-2xl h-full flex flex-col focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 focus-visible:outline-none">
+                  <div className="w-12 h-12 rounded-xl bg-accent-100 dark:bg-accent-900/40 flex items-center justify-center mb-5 text-accent-600 dark:text-accent-400">
                     <Icon size={24} />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-slate-900 dark:text-white">
                     {ch.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6 flex-1">
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3 flex-1">
                     {ch.description}
+                  </p>
+                  <p className="text-xs font-medium text-accent-600 dark:text-accent-400 mb-4">
+                    {ch.valueProp}
                   </p>
                   {ch.external ? (
                     <a
                       href={ch.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-brand-600 dark:text-brand-400 font-semibold text-sm hover:underline underline-offset-4"
+                      className="inline-flex items-center gap-1.5 text-accent-600 dark:text-accent-400 font-semibold text-sm hover:underline underline-offset-4"
                     >
                       {ch.cta} <span aria-hidden="true">↗</span>
                     </a>
                   ) : (
                     <Link
                       href={ch.href}
-                      className="inline-flex items-center gap-1.5 text-brand-600 dark:text-brand-400 font-semibold text-sm hover:underline underline-offset-4"
+                      className="inline-flex items-center gap-1.5 text-accent-600 dark:text-accent-400 font-semibold text-sm hover:underline underline-offset-4"
                     >
                       {ch.cta} <span aria-hidden="true">&rarr;</span>
                     </Link>

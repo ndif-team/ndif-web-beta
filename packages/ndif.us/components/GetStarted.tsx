@@ -56,10 +56,10 @@ export default function GetStarted() {
     <section className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll className="text-center mb-16">
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white" style={{ textWrap: 'balance' }}>
             Get Started in Minutes
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" />
+          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" aria-hidden="true" />
           <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
             Three simple steps to start running experiments on large-scale AI models.
           </p>
@@ -68,7 +68,7 @@ export default function GetStarted() {
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8" staggerDelay={0.15}>
           {steps.map((step) => (
             <StaggerItem key={step.number}>
-              <div className="relative p-8 rounded-2xl bg-slate-50/80 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-600/50 h-full flex flex-col">
+              <div className="relative p-8 rounded-2xl bg-slate-50/80 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-600/50 h-full flex flex-col focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 focus-visible:outline-none">
                 <span className="text-5xl font-bold font-display text-slate-200 dark:text-slate-700 select-none absolute top-4 right-6">
                   {step.number}
                 </span>

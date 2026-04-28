@@ -105,7 +105,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-brand': 'linear-gradient(135deg, #38bdf8 0%, #8b5cf6 100%)',
+        'gradient-brand': 'linear-gradient(135deg, theme(colors.brand.400) 0%, theme(colors.accent.500) 100%)',
         'gradient-dark': 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
       },
       boxShadow: {

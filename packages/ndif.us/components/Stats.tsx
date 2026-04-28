@@ -9,6 +9,7 @@ interface StatProps {
   label: string;
   suffix?: string;
   prefix?: string;
+  attribution?: string;
 }
 
 function AnimatedStat({ value, numericValue, label, suffix = "", prefix = "" }: StatProps) {
@@ -42,7 +43,7 @@ function AnimatedStat({ value, numericValue, label, suffix = "", prefix = "" }: 
       transition={{ duration: 0.5 }}
       className="text-center px-4"
     >
-      <div className="text-4xl md:text-5xl font-bold font-display text-slate-900 dark:text-white mb-2">
+      <div className="text-4xl md:text-5xl font-bold font-display text-slate-900 dark:text-white mb-2" style={{ letterSpacing: '-0.02em' }}>
         {numericValue !== undefined ? (
           <>
             {prefix}
@@ -76,6 +77,9 @@ export default function Stats() {
             <AnimatedStat key={stat.label} {...stat} />
           ))}
         </div>
+        <p className="text-center mt-10 text-xs text-slate-400 dark:text-slate-500">
+          Data sourced from NDIF internal metrics and public GitHub repository statistics.
+        </p>
       </div>
     </section>
   );
