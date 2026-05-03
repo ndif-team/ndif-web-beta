@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { FiSearch, FiX } from "react-icons/fi";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedValue } from "../../lib/useUrlState";
 import { StaggerContainer, StaggerItem } from "../AnimateOnScroll";
 import { researchPapers, type ResearchPaper } from "../../data/research-papers";
 import { getAssetPath } from "../../lib/assetPath";
@@ -70,6 +72,36 @@ export default function ResearchPaperList() {
   const [venueFilter, setVenueFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
   const [revealed, setRevealed] = useState(REVEAL_STEP);
+
+  const router = useRouter();
+  const params = useSearchParams();
+
+  // One-time hydrate from URL on mount
+  useEffect(() => {
+    const cat = params.get("cat");
+    if (cat === "uses_nnsight" || cat === "uses_ndif" || cat === "referencing") setCategoryFilter(cat);
+    const venue = params.get("venue");
+    if (venue && venues.includes(venue)) setVenueFilter(venue);
+    const q = params.get("q") ?? "";
+    if (q) setSearch(q);
+    const pg = parseInt(params.get("page") ?? "1", 10);
+    if (!Number.isNaN(pg) && pg > 0) setPage(pg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const debouncedSearch = useDebouncedValue(search, 300);
+
+  // Sync URL params (filters/search/page); preserves params from other tabs (e.g. ?tab=)
+  useEffect(() => {
+    const next = new URLSearchParams(Array.from(params.entries()));
+    if (categoryFilter === "all") next.delete("cat"); else next.set("cat", categoryFilter);
+    if (venueFilter === "all") next.delete("venue"); else next.set("venue", venueFilter);
+    if (!debouncedSearch) next.delete("q"); else next.set("q", debouncedSearch);
+    if (page === 1) next.delete("page"); else next.set("page", String(page));
+    const qs = next.toString();
+    router.replace(qs ? `?${qs}` : "?", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter, venueFilter, debouncedSearch, page]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();

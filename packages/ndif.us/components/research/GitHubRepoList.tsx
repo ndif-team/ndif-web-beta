@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedValue } from "../../lib/useUrlState";
 import { StaggerContainer, StaggerItem } from "../AnimateOnScroll";
 import { githubRepos, type GitHubRepo } from "../../data/github-repos";
 import { isLowSignal, isCoursework, hasPaper, isPopular, isActive } from "../../lib/repos";
@@ -41,6 +43,42 @@ export default function GitHubRepoList() {
   const [sort, setSort] = useState<Sort>("stars");
   const [page, setPage] = useState(1);
   const [revealed, setRevealed] = useState(REVEAL_STEP);
+
+  const router = useRouter();
+  const params = useSearchParams();
+
+  // One-time hydrate from URL on mount
+  useEffect(() => {
+    const q = params.get("q") ?? ""; if (q) setSearch(q);
+    const f = params.get("f");
+    if (f) {
+      const valid = f.split(",").filter((x): x is Chip => x === "has-paper" || x === "popular" || x === "active");
+      setChips(valid);
+    }
+    if (params.get("course") === "1") setCoursework(true);
+    if (params.get("low") === "1") setLowsignal(true);
+    const s = params.get("sort");
+    if (s === "stars" || s === "recent" || s === "az") setSort(s);
+    const pg = parseInt(params.get("page") ?? "1", 10);
+    if (!Number.isNaN(pg) && pg > 0) setPage(pg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const debouncedSearch = useDebouncedValue(search, 300);
+
+  // Sync URL params; preserves params not owned by this tab (e.g. ?tab=)
+  useEffect(() => {
+    const next = new URLSearchParams(Array.from(params.entries()));
+    if (!debouncedSearch) next.delete("q"); else next.set("q", debouncedSearch);
+    if (chips.length === 0) next.delete("f"); else next.set("f", chips.join(","));
+    if (sort === "stars") next.delete("sort"); else next.set("sort", sort);
+    if (!coursework) next.delete("course"); else next.set("course", "1");
+    if (!lowsignal) next.delete("low"); else next.set("low", "1");
+    if (page === 1) next.delete("page"); else next.set("page", String(page));
+    const qs = next.toString();
+    router.replace(qs ? `?${qs}` : "?", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, chips, sort, coursework, lowsignal, page]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
