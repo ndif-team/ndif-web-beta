@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync:repos": "node scripts/sync-github-repos.mjs"
   },
   "author": "NDIF Team",
   "license": "ISC",
