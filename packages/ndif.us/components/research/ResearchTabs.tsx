@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { researchPapers } from "../../data/research-papers";
 import { githubRepos } from "../../data/github-repos";
 import { isLowSignal, isCoursework } from "../../lib/repos";
@@ -17,6 +17,7 @@ export default function ResearchTabs() {
   const initial = (search.get("tab") === "code" ? "code" : "papers") as Tab;
   const [tab, setTab] = useState<Tab>(initial);
   const tablistRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
 
   // Sync to URL on tab change (preserves other params)
   useEffect(() => {
@@ -53,10 +54,10 @@ export default function ResearchTabs() {
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: reduce ? 0 : 0.2 }}
             id={`panel-${tab}`}
             role="tabpanel"
             aria-labelledby={`tab-${tab}`}
