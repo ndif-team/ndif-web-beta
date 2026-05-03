@@ -5,6 +5,7 @@ import Stats from "components/Stats";
 import WhatIsNDIF from "components/WhatIsNDIF";
 import ModelCards from "components/ModelCards";
 import FeaturedResearch from "components/FeaturedResearch";
+import FeaturedCode from "components/FeaturedCode";
 import GetStarted from "components/GetStarted";
 import CommunityCTA from "components/CommunityCTA";
 import Footer from "components/Footer";
@@ -20,6 +21,7 @@ export default function Page() {
         <WhatIsNDIF />
         <ModelCards />
         <FeaturedResearch />
+        <FeaturedCode />
         <GetStarted />
         <CommunityCTA />
       </main>
