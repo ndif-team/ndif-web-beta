@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Header from "components/Header";
 import Footer from "components/Footer";
 import ResearchCitation from "components/research/ResearchCitation";
-import ResearchPaperList from "components/research/ResearchPaperList";
+import ResearchTabs from "components/research/ResearchTabs";
 
 export const metadata: Metadata = {
   title: "Research | NDIF — National Deep Inference Fabric",
   description:
-    "Citing NDIF in your research. Browse 30+ published papers using or referencing NDIF and NNsight across top venues including ICLR, NeurIPS, ICML, and EMNLP.",
+    "Citing NDIF in your research. Browse 100+ published papers and 230+ open-source repos using or referencing NDIF and NNsight.",
 };
 
 export default function ResearchPage() {
@@ -16,7 +17,9 @@ export default function ResearchPage() {
       <Header />
       <main>
         <ResearchCitation />
-        <ResearchPaperList />
+        <Suspense fallback={null}>
+          <ResearchTabs />
+        </Suspense>
       </main>
       <Footer />
     </div>
