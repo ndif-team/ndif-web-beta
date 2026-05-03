@@ -6,7 +6,7 @@ export interface ResearchPaper {
   url: string;
   image?: string;
   description: string;
-  category: "used-nnsight" | "used-ndif" | "referencing";
+  category: "uses_nnsight" | "uses_ndif" | "referencing";
 }
 
 // Research papers are loaded from pipeline JSON at build time.

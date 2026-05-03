@@ -7,7 +7,7 @@ import { researchPapers } from "data/research-papers";
 import { getAssetPath } from "../lib/assetPath";
 
 const featured = researchPapers
-  .filter((p) => (p.category === "used-nnsight" || p.category === "used-ndif") && p.image)
+  .filter((p) => (p.category === "uses_nnsight" || p.category === "uses_ndif") && p.image)
   .slice(0, 6);
 
 export default function FeaturedResearch() {

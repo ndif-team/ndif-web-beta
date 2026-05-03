@@ -7,7 +7,7 @@ import AnimateOnScroll, { StaggerContainer, StaggerItem } from "../AnimateOnScro
 import { researchPapers, type ResearchPaper } from "data/research-papers";
 import { getAssetPath } from "../../lib/assetPath";
 
-type FilterCategory = "all" | "used-nnsight" | "used-ndif" | "referencing";
+type FilterCategory = "all" | "uses_nnsight" | "uses_ndif" | "referencing";
 
 function extractVenueShort(venue: string): string {
   const match = venue.match(/^([\w-]+)/);
@@ -45,16 +45,16 @@ function PaperCard({ paper }: { paper: ResearchPaper }) {
           </span>
           <span
             className={`inline-block px-2 py-0.5 text-2xs font-semibold rounded-full ${
-              paper.category === "used-nnsight"
+              paper.category === "uses_nnsight"
                 ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                : paper.category === "used-ndif"
+                : paper.category === "uses_ndif"
                   ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
                   : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
             }`}
           >
-            {paper.category === "used-nnsight"
+            {paper.category === "uses_nnsight"
               ? "Used NNsight"
-              : paper.category === "used-ndif"
+              : paper.category === "uses_ndif"
                 ? "Used remote NDIF"
                 : "References NDIF"}
           </span>
@@ -102,8 +102,8 @@ export default function ResearchPaperList() {
   }, [venueFilter]);
 
   const totalCount = scopedPapers.length;
-  const nnsightCount = scopedPapers.filter((p) => p.category === "used-nnsight").length;
-  const ndifCount = scopedPapers.filter((p) => p.category === "used-ndif").length;
+  const nnsightCount = scopedPapers.filter((p) => p.category === "uses_nnsight").length;
+  const ndifCount = scopedPapers.filter((p) => p.category === "uses_ndif").length;
   const refCount = scopedPapers.filter((p) => p.category === "referencing").length;
 
   // A key that changes whenever any filter changes — forces StaggerContainer
@@ -161,15 +161,15 @@ export default function ResearchPaperList() {
                 All ({totalCount})
               </FilterChip>
               <FilterChip
-                active={categoryFilter === "used-nnsight"}
-                onClick={() => setCategoryFilter("used-nnsight")}
+                active={categoryFilter === "uses_nnsight"}
+                onClick={() => setCategoryFilter("uses_nnsight")}
                 disabled={nnsightCount === 0}
               >
                 Used NNsight ({nnsightCount})
               </FilterChip>
               <FilterChip
-                active={categoryFilter === "used-ndif"}
-                onClick={() => setCategoryFilter("used-ndif")}
+                active={categoryFilter === "uses_ndif"}
+                onClick={() => setCategoryFilter("uses_ndif")}
                 disabled={ndifCount === 0}
               >
                 Used remote NDIF ({ndifCount})
