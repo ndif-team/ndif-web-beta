@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync:repos": "node scripts/sync-github-repos.mjs"
+    "sync:repos": "node scripts/sync-github-repos.mjs",
+    "sync:papers": "node scripts/sync-research-papers.mjs",
+    "sync:all": "node scripts/sync-github-repos.mjs && node scripts/sync-research-papers.mjs"
   },
   "author": "NDIF Team",
   "license": "ISC",
