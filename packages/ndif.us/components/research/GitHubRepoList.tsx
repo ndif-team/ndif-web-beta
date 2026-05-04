@@ -4,22 +4,29 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedValue } from "../../lib/useUrlState";
-import { StaggerContainer, StaggerItem } from "../AnimateOnScroll";
 import { githubRepos, type GitHubRepo } from "../../data/github-repos";
 import { isLowSignal, isCoursework, hasPaper, isPopular, isActive } from "../../lib/repos";
 import GitHubRepoCard from "./GitHubRepoCard";
 import Pagination, { itemsOnPage } from "./Pagination";
 
-type Chip = "has-paper" | "popular" | "active";
+type Chip = "has-paper" | "popular" | "active" | "coursework";
 type Sort = "stars" | "recent" | "az";
 
 const PAGE_SIZE = 36;
 const REVEAL_STEP = 12;
 
+const CHIP_LABELS: Record<Chip, string> = {
+  "has-paper": "Has paper",
+  popular: "Popular",
+  active: "Active",
+  coursework: "Coursework",
+};
+
 function chipMatch(repo: GitHubRepo, chips: Chip[]): boolean {
   if (chips.includes("has-paper") && !hasPaper(repo)) return false;
   if (chips.includes("popular") && !isPopular(repo)) return false;
   if (chips.includes("active") && !isActive(repo)) return false;
+  if (chips.includes("coursework") && !isCoursework(repo)) return false;
   return true;
 }
 
@@ -38,7 +45,6 @@ function sortRepos(list: GitHubRepo[], sort: Sort): GitHubRepo[] {
 export default function GitHubRepoList() {
   const [search, setSearch] = useState("");
   const [chips, setChips] = useState<Chip[]>([]);
-  const [coursework, setCoursework] = useState(false);
   const [lowsignal, setLowsignal] = useState(false);
   const [sort, setSort] = useState<Sort>("stars");
   const [page, setPage] = useState(1);
@@ -52,10 +58,11 @@ export default function GitHubRepoList() {
     const q = params.get("q") ?? ""; if (q) setSearch(q);
     const f = params.get("f");
     if (f) {
-      const valid = f.split(",").filter((x): x is Chip => x === "has-paper" || x === "popular" || x === "active");
+      const valid = f.split(",").filter((x): x is Chip =>
+        x === "has-paper" || x === "popular" || x === "active" || x === "coursework"
+      );
       setChips(valid);
     }
-    if (params.get("course") === "1") setCoursework(true);
     if (params.get("low") === "1") setLowsignal(true);
     const s = params.get("sort");
     if (s === "stars" || s === "recent" || s === "az") setSort(s);
@@ -72,19 +79,17 @@ export default function GitHubRepoList() {
     if (!debouncedSearch) next.delete("q"); else next.set("q", debouncedSearch);
     if (chips.length === 0) next.delete("f"); else next.set("f", chips.join(","));
     if (sort === "stars") next.delete("sort"); else next.set("sort", sort);
-    if (!coursework) next.delete("course"); else next.set("course", "1");
     if (!lowsignal) next.delete("low"); else next.set("low", "1");
     if (page === 1) next.delete("page"); else next.set("page", String(page));
     const qs = next.toString();
     router.replace(qs ? `?${qs}` : "?", { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, chips, sort, coursework, lowsignal, page]);
+  }, [debouncedSearch, chips, sort, lowsignal, page]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     let list = githubRepos as GitHubRepo[];
     if (!lowsignal) list = list.filter((r) => !isLowSignal(r));
-    if (!coursework) list = list.filter((r) => !isCoursework(r));
     list = list.filter((r) => chipMatch(r, chips));
     if (q) {
       list = list.filter(
@@ -95,7 +100,7 @@ export default function GitHubRepoList() {
       );
     }
     return sortRepos(list, sort);
-  }, [search, chips, coursework, lowsignal, sort]);
+  }, [search, chips, lowsignal, sort]);
 
   const total = filtered.length;
   const onPage = itemsOnPage(total, page, PAGE_SIZE);
@@ -110,7 +115,7 @@ export default function GitHubRepoList() {
   }, [total, page]);
 
   // Reset page+reveal whenever filter inputs change
-  const filterKey = `${search}|${chips.join(",")}|${coursework}|${lowsignal}|${sort}`;
+  const filterKey = `${search}|${chips.join(",")}|${lowsignal}|${sort}`;
   const lastKey = useRef(filterKey);
   useEffect(() => {
     if (lastKey.current !== filterKey) {
@@ -147,9 +152,9 @@ export default function GitHubRepoList() {
         )}
       </div>
 
-      {/* Chips + toggles + sort */}
+      {/* Chips + toggle + sort */}
       <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-        {(["has-paper", "popular", "active"] as Chip[]).map((c) => (
+        {(["has-paper", "popular", "active", "coursework"] as Chip[]).map((c) => (
           <button
             key={c}
             onClick={() => toggleChip(c)}
@@ -160,16 +165,12 @@ export default function GitHubRepoList() {
                 : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400"
             }`}
           >
-            {c === "has-paper" ? "Has paper" : c === "popular" ? "Popular" : "Active"}
+            {CHIP_LABELS[c]}
           </button>
         ))}
 
         <span className="mx-2 text-slate-300 dark:text-slate-600">|</span>
 
-        <label className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-          <input type="checkbox" checked={coursework} onChange={(e) => setCoursework(e.target.checked)} className="rounded border-slate-300" />
-          Show coursework
-        </label>
         <label className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
           <input type="checkbox" checked={lowsignal} onChange={(e) => setLowsignal(e.target.checked)} className="rounded border-slate-300" />
           Show low-signal
@@ -197,7 +198,6 @@ export default function GitHubRepoList() {
             onClick={() => {
               setSearch("");
               setChips([]);
-              setCoursework(false);
               setLowsignal(false);
               setSort("stars");
             }}
@@ -208,13 +208,11 @@ export default function GitHubRepoList() {
         </div>
       ) : (
         <>
-          <StaggerContainer key={`${filterKey}|${page}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.05}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {visible.map((r) => (
-              <StaggerItem key={`${r.owner}/${r.repo}`}>
-                <GitHubRepoCard repo={r} />
-              </StaggerItem>
+              <GitHubRepoCard key={`${r.owner}/${r.repo}`} repo={r} />
             ))}
-          </StaggerContainer>
+          </div>
 
           <Pagination
             total={total}

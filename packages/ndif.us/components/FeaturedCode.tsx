@@ -6,7 +6,7 @@ import { githubRepos } from "../data/github-repos";
 import GitHubRepoCard from "./research/GitHubRepoCard";
 
 // Featured selection is data-driven — no slug list, no manual flagging required.
-// Rule: top by stars among eligible repos (non-course, non-archived), with at
+// Rule: top by stars among non-archived repos (coursework included), with at
 // least N_PAPER slots reserved for repos that have a linked paper. The pipeline
 // `is_featured` field acts as an optional override (pinned repos take priority).
 const N_TOTAL = 6;
@@ -15,7 +15,7 @@ const N_PAPER = 2;
 const pinned = githubRepos.filter((r) => r.is_featured === true).slice(0, N_TOTAL);
 
 const eligibleSorted = [...githubRepos]
-  .filter((r) => !pinned.includes(r) && !r.archived && r.repo_type !== "course")
+  .filter((r) => !pinned.includes(r) && !r.archived)
   .sort((a, b) => b.stars - a.stars);
 
 const paperPicks = eligibleSorted

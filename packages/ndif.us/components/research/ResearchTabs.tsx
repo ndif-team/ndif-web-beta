@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { researchPapers } from "../../data/research-papers";
 import { githubRepos } from "../../data/github-repos";
-import { isLowSignal, isCoursework } from "../../lib/repos";
+import { isLowSignal } from "../../lib/repos";
 import ResearchPaperList from "./ResearchPaperList";
 import GitHubRepoList from "./GitHubRepoList";
 
@@ -28,9 +28,9 @@ export default function ResearchTabs() {
     router.replace(qs ? `?${qs}` : "?", { scroll: false });
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Counter values
+  // Counter values — match the Code tab's default visibility (coursework now shown by default).
   const papersCount = researchPapers.length;
-  const codeCount = githubRepos.filter((r) => !isLowSignal(r) && !isCoursework(r)).length;
+  const codeCount = githubRepos.filter((r) => !isLowSignal(r)).length;
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
