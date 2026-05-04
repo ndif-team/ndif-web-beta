@@ -5,16 +5,28 @@ import AnimateOnScroll, { StaggerContainer, StaggerItem } from "./AnimateOnScrol
 import { githubRepos } from "../data/github-repos";
 import GitHubRepoCard from "./research/GitHubRepoCard";
 
-// Prefer pipeline-marked is_featured. Fall back to top-N by stars among repos
-// with a linked paper and non-course repo_type when the pipeline hasn't shipped
-// the is_featured field yet.
-const explicit = githubRepos.filter((r) => r.is_featured === true);
-const featured = explicit.length > 0
-  ? explicit.slice(0, 6)
-  : [...githubRepos]
-      .filter((r) => r.linked_paper_url !== null && r.repo_type !== "course")
-      .sort((a, b) => b.stars - a.stars)
-      .slice(0, 6);
+// Featured selection is data-driven — no slug list, no manual flagging required.
+// Rule: top by stars among eligible repos (non-course, non-archived), with at
+// least N_PAPER slots reserved for repos that have a linked paper. The pipeline
+// `is_featured` field acts as an optional override (pinned repos take priority).
+const N_TOTAL = 6;
+const N_PAPER = 2;
+
+const pinned = githubRepos.filter((r) => r.is_featured === true).slice(0, N_TOTAL);
+
+const eligibleSorted = [...githubRepos]
+  .filter((r) => !pinned.includes(r) && !r.archived && r.repo_type !== "course")
+  .sort((a, b) => b.stars - a.stars);
+
+const paperPicks = eligibleSorted
+  .filter((r) => r.linked_paper_url !== null)
+  .slice(0, Math.max(0, N_PAPER - pinned.filter((p) => p.linked_paper_url !== null).length));
+
+const remaining = eligibleSorted
+  .filter((r) => !paperPicks.includes(r))
+  .slice(0, N_TOTAL - pinned.length - paperPicks.length);
+
+const featured = [...pinned, ...paperPicks, ...remaining].sort((a, b) => b.stars - a.stars);
 
 export default function FeaturedCode() {
   if (featured.length === 0) return null;
