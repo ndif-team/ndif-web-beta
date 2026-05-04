@@ -35,7 +35,13 @@ export default function ResearchTabs() {
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       e.preventDefault();
-      setTab((t) => (t === "papers" ? "code" : "papers"));
+      const next: Tab = tab === "papers" ? "code" : "papers";
+      setTab(next);
+      // ARIA tablist pattern: move keyboard focus to the newly active tab.
+      // RAF waits for React to apply tabIndex updates before focusing.
+      requestAnimationFrame(() => {
+        tablistRef.current?.querySelector<HTMLButtonElement>(`#tab-${next}`)?.focus();
+      });
     }
   }
 

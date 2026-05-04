@@ -104,7 +104,7 @@ export default function ResearchPaperList() {
   }, [categoryFilter, venueFilter, debouncedSearch, page]);
 
   const filtered = useMemo(() => {
-    const q = search.toLowerCase();
+    const q = search.trim().toLowerCase();
     return researchPapers.filter((p) => {
       if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
       if (venueFilter !== "all" && extractVenueShort(p.venue) !== venueFilter) return false;
@@ -118,6 +118,13 @@ export default function ResearchPaperList() {
       return true;
     });
   }, [search, categoryFilter, venueFilter]);
+
+  // Clamp page to a valid range whenever filtered length changes
+  // (handles invalid `?page=99` from URL hydration and over-filtering).
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (page > totalPages) setPage(totalPages);
+  }, [filtered.length, page]);
 
   // Reset page+reveal when filters change
   const filterKey = `${categoryFilter}|${venueFilter}|${search}`;

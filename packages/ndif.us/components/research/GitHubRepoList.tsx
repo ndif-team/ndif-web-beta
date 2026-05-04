@@ -102,6 +102,13 @@ export default function GitHubRepoList() {
   const start = (page - 1) * PAGE_SIZE;
   const visible = filtered.slice(start, start + Math.min(revealed, onPage));
 
+  // Clamp page to a valid range whenever filtered length changes
+  // (handles invalid `?page=99` from URL hydration and over-filtering).
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    if (page > totalPages) setPage(totalPages);
+  }, [total, page]);
+
   // Reset page+reveal whenever filter inputs change
   const filterKey = `${search}|${chips.join(",")}|${coursework}|${lowsignal}|${sort}`;
   const lastKey = useRef(filterKey);
@@ -192,6 +199,7 @@ export default function GitHubRepoList() {
               setChips([]);
               setCoursework(false);
               setLowsignal(false);
+              setSort("stars");
             }}
             className="mt-4 text-brand-600 dark:text-brand-400 font-medium hover:underline"
           >
