@@ -48,13 +48,17 @@ export default function ResearchTabs() {
   return (
     <section className="py-20 border-t border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={tablistRef} role="tablist" aria-label="Research content" onKeyDown={handleKeyDown} className="flex justify-center gap-2 mb-8">
-          <TabButton active={tab === "papers"} onClick={() => setTab("papers")} controls="panel-papers">
-            Papers <span className="text-2xs opacity-70">({papersCount})</span>
-          </TabButton>
-          <TabButton active={tab === "code"} onClick={() => setTab("code")} controls="panel-code">
-            Code <span className="text-2xs opacity-70">({codeCount})</span>
-          </TabButton>
+        <div className="flex justify-center mb-10">
+          <div
+            ref={tablistRef}
+            role="tablist"
+            aria-label="Research content"
+            onKeyDown={handleKeyDown}
+            className="relative inline-flex items-end gap-8 border-b border-slate-200 dark:border-slate-800"
+          >
+            <TabButton active={tab === "papers"} onClick={() => setTab("papers")} controls="panel-papers" reduce={!!reduce} label="Papers" count={papersCount} />
+            <TabButton active={tab === "code"} onClick={() => setTab("code")} controls="panel-code" reduce={!!reduce} label="Code" count={codeCount} />
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
@@ -80,12 +84,16 @@ function TabButton({
   active,
   onClick,
   controls,
-  children,
+  label,
+  count,
+  reduce,
 }: {
   active: boolean;
   onClick: () => void;
   controls: string;
-  children: React.ReactNode;
+  label: string;
+  count: number;
+  reduce: boolean;
 }) {
   return (
     <button
@@ -95,13 +103,23 @@ function TabButton({
       id={controls.replace("panel", "tab")}
       tabIndex={active ? 0 : -1}
       onClick={onClick}
-      className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
+      className={`relative px-1 pb-3 pt-1 text-base font-semibold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 rounded-sm ${
         active
-          ? "bg-brand-600 text-white shadow-sm"
-          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400 hover:text-brand-600"
+          ? "text-slate-900 dark:text-white"
+          : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
       }`}
     >
-      {children}
+      <span>{label}</span>
+      <span className={`ml-1.5 text-xs font-medium tabular-nums ${active ? "text-slate-500 dark:text-slate-400" : "text-slate-400 dark:text-slate-500"}`}>
+        {count}
+      </span>
+      {active && (
+        <motion.span
+          layoutId="research-tab-indicator"
+          className="absolute left-0 right-0 -bottom-px h-0.5 bg-brand-600 dark:bg-brand-400 rounded-full"
+          transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }}
+        />
+      )}
     </button>
   );
 }

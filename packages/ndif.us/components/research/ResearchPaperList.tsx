@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { FiSearch, FiX } from "react-icons/fi";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedValue } from "../../lib/useUrlState";
 import { researchPapers, type ResearchPaper } from "../../data/research-papers";
@@ -22,14 +23,20 @@ function extractVenueShort(venue: string): string {
 const venues = Array.from(new Set(researchPapers.map((p) => extractVenueShort(p.venue)))).sort();
 
 const CHIP_LABELS: Record<Exclude<FilterCategory, "all">, string> = {
-  uses_nnsight: "Built with NNsight",
-  uses_ndif: "Hosted on NDIF",
-  referencing: "Cites NDIF",
+  uses_ndif: "NDIF-supported",
+  uses_nnsight: "NNsight-supported",
+  referencing: "References-only",
+};
+
+const CHIP_DESCRIPTIONS: Record<Exclude<FilterCategory, "all">, string> = {
+  uses_ndif: "Researchers ran experiments on NDIF-hosted models (used hosted compute via NNsight).",
+  uses_nnsight: "NNsight as the experimental substrate without NDIF compute (library used locally or self-hosted).",
+  referencing: "Survey papers, methodology papers, and AI-policy work that cite NDIF/NNsight as an enabling resource.",
 };
 
 const CHIP_CLASSES: Record<Exclude<FilterCategory, "all">, string> = {
-  uses_nnsight: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300",
   uses_ndif: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+  uses_nnsight: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300",
   referencing: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300",
 };
 
@@ -51,7 +58,10 @@ function PaperCard({ paper }: { paper: ResearchPaper }) {
           <span className="inline-block px-2 py-0.5 text-2xs font-semibold rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300">
             {paper.venue}
           </span>
-          <span className={`inline-block px-2 py-0.5 text-2xs font-semibold rounded-full ${CHIP_CLASSES[paper.category]}`}>
+          <span
+            className={`inline-block px-2 py-0.5 text-2xs font-semibold rounded-full ${CHIP_CLASSES[paper.category]}`}
+            title={CHIP_DESCRIPTIONS[paper.category]}
+          >
             {CHIP_LABELS[paper.category]}
           </span>
         </div>
@@ -166,11 +176,11 @@ export default function ResearchPaperList() {
         <p className="text-sm text-slate-500 dark:text-slate-400">
           <strong className="text-slate-700 dark:text-slate-200">{total}</strong> papers
           <span className="mx-1.5">·</span>
-          <strong className="text-slate-700 dark:text-slate-200">{ndifCount}</strong> hosted on NDIF
+          <strong className="text-slate-700 dark:text-slate-200">{ndifCount}</strong> NDIF-supported
           <span className="mx-1.5">·</span>
-          <strong className="text-slate-700 dark:text-slate-200">{nnsightCount}</strong> built with NNsight
+          <strong className="text-slate-700 dark:text-slate-200">{nnsightCount}</strong> NNsight-supported
           <span className="mx-1.5">·</span>
-          <strong className="text-slate-700 dark:text-slate-200">{refCount}</strong> citing NDIF
+          <strong className="text-slate-700 dark:text-slate-200">{refCount}</strong> references-only
         </p>
       </div>
 
@@ -196,14 +206,29 @@ export default function ResearchPaperList() {
         <FilterChip active={categoryFilter === "all"} onClick={() => setCategoryFilter("all")}>
           All ({scopedTotal})
         </FilterChip>
-        <FilterChip active={categoryFilter === "uses_nnsight"} onClick={() => setCategoryFilter("uses_nnsight")} disabled={scopedNn === 0}>
-          Built with NNsight ({scopedNn})
+        <FilterChip
+          active={categoryFilter === "uses_ndif"}
+          onClick={() => setCategoryFilter("uses_ndif")}
+          disabled={scopedNd === 0}
+          description={CHIP_DESCRIPTIONS.uses_ndif}
+        >
+          NDIF-supported ({scopedNd})
         </FilterChip>
-        <FilterChip active={categoryFilter === "uses_ndif"} onClick={() => setCategoryFilter("uses_ndif")} disabled={scopedNd === 0}>
-          Hosted on NDIF ({scopedNd})
+        <FilterChip
+          active={categoryFilter === "uses_nnsight"}
+          onClick={() => setCategoryFilter("uses_nnsight")}
+          disabled={scopedNn === 0}
+          description={CHIP_DESCRIPTIONS.uses_nnsight}
+        >
+          NNsight-supported ({scopedNn})
         </FilterChip>
-        <FilterChip active={categoryFilter === "referencing"} onClick={() => setCategoryFilter("referencing")} disabled={scopedRef === 0}>
-          Cites NDIF ({scopedRef})
+        <FilterChip
+          active={categoryFilter === "referencing"}
+          onClick={() => setCategoryFilter("referencing")}
+          disabled={scopedRef === 0}
+          description={CHIP_DESCRIPTIONS.referencing}
+        >
+          References-only ({scopedRef})
         </FilterChip>
 
         <span className="mx-2 text-slate-300 dark:text-slate-600">|</span>
@@ -262,26 +287,56 @@ function FilterChip({
   onClick,
   children,
   disabled,
+  description,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
   disabled?: boolean;
+  description?: string;
 }) {
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const open = !!description && (hovered || focused);
+
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      aria-pressed={active}
-      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-        active
-          ? "bg-brand-600 text-white shadow-sm"
-          : disabled
-            ? "bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed"
-            : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400"
-      }`}
+    <span
+      className="relative inline-block"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {children}
-    </button>
+      <button
+        onClick={onClick}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        disabled={disabled}
+        aria-pressed={active}
+        aria-describedby={description ? `chip-desc-${active}-${(children as string)?.toString?.()}` : undefined}
+        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+          active
+            ? "bg-brand-600 text-white shadow-sm"
+            : disabled
+              ? "bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 cursor-not-allowed"
+              : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400"
+        }`}
+      >
+        {children}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            role="tooltip"
+            className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 w-64 rounded-lg bg-slate-900 dark:bg-slate-700 text-white text-xs leading-snug px-3 py-2 shadow-lg"
+          >
+            <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-slate-900 dark:bg-slate-700" aria-hidden="true" />
+            {description}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
   );
 }
