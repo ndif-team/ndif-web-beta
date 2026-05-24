@@ -4,7 +4,7 @@ import Footer from "components/Footer";
 import StatusDashboard from "components/status/StatusDashboard";
 
 export const metadata: Metadata = {
-  title: "Status | NDIF — National Deep Inference Fabric",
+  title: "Status",
   description:
     "Live status dashboard for the NDIF cluster — view model availability, deployment levels, GPU utilization, and system health in real time.",
 };

@@ -10,6 +10,10 @@ const featured = researchPapers
   .filter((p) => (p.category === "uses_nnsight" || p.category === "uses_ndif") && p.image)
   .slice(0, 6);
 
+// Rounded down to nearest 10 to avoid claiming a precision that drifts as the
+// pipeline ingests new papers between deploys.
+const totalPapersRounded = Math.floor(researchPapers.length / 10) * 10;
+
 export default function FeaturedResearch() {
   return (
     <section
@@ -23,9 +27,9 @@ export default function FeaturedResearch() {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-accent-500 mx-auto rounded-full mb-6" aria-hidden="true" />
           <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-            Researchers across 63+ institutions use NDIF and NNsight to
-            uncover how large-scale AI models work, with 38+ published papers
-            at top venues including ICLR, NeurIPS, ICML, and EMNLP.
+            Researchers worldwide use NDIF and NNsight to uncover how
+            large-scale AI models work, with {totalPapersRounded}+ published
+            papers at top venues including ICLR, NeurIPS, ICML, and EMNLP.
           </p>
         </AnimateOnScroll>
 

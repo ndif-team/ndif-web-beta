@@ -6,9 +6,9 @@ import ResearchCitation from "components/research/ResearchCitation";
 import ResearchTabs from "components/research/ResearchTabs";
 
 export const metadata: Metadata = {
-  title: "Research | NDIF — National Deep Inference Fabric",
+  title: "Research",
   description:
-    "Citing NDIF in your research. Browse 100+ published papers and 230+ open-source repos using or referencing NDIF and NNsight.",
+    "Citing NDIF in your research. Browse published papers and open-source repos using or referencing NDIF and NNsight.",
 };
 
 export default function ResearchPage() {

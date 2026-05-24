@@ -1,20 +1,38 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
 import AnimateOnScroll from "../AnimateOnScroll";
 import { faq, type FAQItem, type FAQSegment } from "data/faq";
 
+function isInternalHref(href: string | undefined): boolean {
+  return !!href && href.startsWith("/") && !href.startsWith("//");
+}
+
 function renderAnswer(segments: FAQSegment[]) {
   return segments.map((seg, i) => {
     if (seg.type === "link") {
+      const href = seg.href ?? "#";
+      const className =
+        "text-brand-600 dark:text-brand-400 hover:underline underline-offset-4 font-medium";
+
+      if (isInternalHref(href)) {
+        return (
+          <Link key={i} href={href} className={className}>
+            {seg.content}
+          </Link>
+        );
+      }
+
+      const isMailto = href.startsWith("mailto:");
       return (
         <a
           key={i}
-          href={seg.href}
-          target={seg.href?.startsWith("mailto:") ? undefined : "_blank"}
-          rel={seg.href?.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-          className="text-brand-600 dark:text-brand-400 hover:underline underline-offset-4 font-medium"
+          href={href}
+          target={isMailto ? undefined : "_blank"}
+          rel={isMailto ? undefined : "noopener noreferrer"}
+          className={className}
         >
           {seg.content}
         </a>

@@ -7,7 +7,7 @@ import CommunityWorkshop from "components/community/CommunityWorkshop";
 import CommunityJobs from "components/community/CommunityJobs";
 
 export const metadata: Metadata = {
-  title: "Community | NDIF — National Deep Inference Fabric",
+  title: "Community",
   description:
     "Get involved with NDIF — join our Discord community, use NNsight, contribute to open-source, attend workshops, and explore job opportunities.",
 };

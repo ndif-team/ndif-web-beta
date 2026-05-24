@@ -18,8 +18,8 @@ export const faq: FAQItem[] = [
   {
     question: "When can I use NDIF?",
     answer: [
-      { type: "text", content: "NDIF is available for you to use today. Get started here: " },
-      { type: "link", content: "ndif-team.github.io/ndif-web-beta/get-started", href: "https://ndif-team.github.io/ndif-web-beta/get-started" },
+      { type: "text", content: "NDIF is available for you to use today. " },
+      { type: "link", content: "Get started here.", href: "/get-started" },
     ],
   },
   {

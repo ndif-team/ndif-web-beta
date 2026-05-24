@@ -7,7 +7,7 @@ import GetStartedSteps from "components/get-started/GetStartedSteps";
 import GetStartedFollow from "components/get-started/GetStartedFollow";
 
 export const metadata: Metadata = {
-  title: "Get Started | NDIF — National Deep Inference Fabric",
+  title: "Get Started",
   description:
     "Get started with NDIF and NNsight — install the library, register for a free API key, access LLM internals remotely, and join the community.",
 };

@@ -7,7 +7,7 @@ import FabricFAQ from "components/fabric/FabricFAQ";
 import FabricCitation from "components/fabric/FabricCitation";
 
 export const metadata: Metadata = {
-  title: "The Fabric | NDIF — National Deep Inference Fabric",
+  title: "The Fabric",
   description:
     "Learn about the three parts of NDIF: the HPC fabric powered by NCSA's Delta, the NNsight open-source library, and our nationwide training program.",
 };

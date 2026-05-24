@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { researchPapers } from "data/research-papers";
+import { githubRepos } from "data/github-repos";
 
 interface StatProps {
   value: string;
@@ -15,10 +17,15 @@ interface StatProps {
 function AnimatedStat({ value, numericValue, label, suffix = "", prefix = "" }: StatProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const reducedMotion = useReducedMotion();
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     if (!isInView || numericValue === undefined) return;
+    if (reducedMotion) {
+      setDisplayValue(numericValue);
+      return;
+    }
     const duration = 1500;
     const steps = 40;
     const increment = numericValue / steps;
@@ -33,7 +40,7 @@ function AnimatedStat({ value, numericValue, label, suffix = "", prefix = "" }: 
       }
     }, duration / steps);
     return () => clearInterval(interval);
-  }, [isInView, numericValue]);
+  }, [isInView, numericValue, reducedMotion]);
 
   return (
     <motion.div
@@ -61,11 +68,23 @@ function AnimatedStat({ value, numericValue, label, suffix = "", prefix = "" }: 
   );
 }
 
+// All three "+" stats are derived at build time from the pipeline output
+// (research-papers.json and github-repos.json). Rounded *down* to avoid
+// claiming a precision that ticks over between deploys.
+const papersRounded = Math.floor(researchPapers.length / 10) * 10;
+const reposRounded = Math.floor(githubRepos.length / 10) * 10;
+const totalStars = githubRepos.reduce((sum, r) => sum + r.stars, 0);
+const starsRounded = Math.floor(totalStars / 100) * 100;
+
+// GPU count is intentionally static — matches the NCSA Delta allocation that
+// powers NDIF today. Update here when the cluster footprint changes.
+const STATIC_GPU_COUNT = 32;
+
 const stats: StatProps[] = [
-  { value: "63+", numericValue: 63, label: "Research Institutions", suffix: "+" },
-  { value: "127+", numericValue: 127, label: "Research Citations", suffix: "+" },
-  { value: "850+", numericValue: 850, label: "GitHub Stars", suffix: "+" },
-  { value: "32", numericValue: 32, label: "GPUs", prefix: "" },
+  { value: `${papersRounded}+`, numericValue: papersRounded, label: "Research Papers", suffix: "+" },
+  { value: `${reposRounded}+`, numericValue: reposRounded, label: "Open-source Repos", suffix: "+" },
+  { value: `${starsRounded}+`, numericValue: starsRounded, label: "GitHub Stars", suffix: "+" },
+  { value: `${STATIC_GPU_COUNT}`, numericValue: STATIC_GPU_COUNT, label: "GPUs" },
 ];
 
 export default function Stats() {

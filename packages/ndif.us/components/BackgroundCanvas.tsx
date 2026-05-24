@@ -1,11 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { useSettings } from "./SettingsProvider";
 import { useTheme } from "next-themes";
 
+const MOBILE_BREAKPOINT_PX = 768;
+
+// Tailwind `md:` breakpoint. Below this we render a lighter scene (fewer
+// particles, no wireframe plane) so phones/tablets don't pay the full GPU/CPU
+// cost of the desktop variant.
+function isMobileViewport(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < MOBILE_BREAKPOINT_PX;
+}
+
+// Hook: returns true when the client wants the WebGL background. We honour
+// `prefers-reduced-motion: reduce` (accessibility — users who set this often
+// do so to suppress exactly this kind of decorative animation). Returns false
+// during SSR. Re-evaluates if the reduced-motion preference flips at runtime.
+function useShouldRenderCanvas(): boolean {
+  const [should, setShould] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const evaluate = () => {
+      setShould(!reducedMotionQuery.matches);
+    };
+
+    evaluate();
+    reducedMotionQuery.addEventListener("change", evaluate);
+    return () => {
+      reducedMotionQuery.removeEventListener("change", evaluate);
+    };
+  }, []);
+
+  return should;
+}
+
 export default function BackgroundCanvas() {
+  const shouldRender = useShouldRenderCanvas();
+  if (!shouldRender) return null;
+  return <BackgroundCanvasImpl />;
+}
+
+function BackgroundCanvasImpl() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { isAnimationEnabled } = useSettings();
   const { resolvedTheme } = useTheme();
@@ -16,7 +58,7 @@ export default function BackgroundCanvas() {
     camera: THREE.PerspectiveCamera;
     particles: THREE.Points;
     particles2: THREE.Points;
-    plane: THREE.Mesh;
+    plane: THREE.Mesh | null;
     animationId: number;
     time: number;
     count: number;
@@ -27,8 +69,10 @@ export default function BackgroundCanvas() {
     if (!s) return;
     const bgColor = isDark ? 0x020617 : 0xffffff;
     (s.scene.fog as THREE.FogExp2).color.setHex(bgColor);
-    const planeMat = s.plane.material as THREE.MeshBasicMaterial;
-    planeMat.color.setHex(isDark ? 0x0f172a : 0xe2e8f0);
+    if (s.plane) {
+      const planeMat = s.plane.material as THREE.MeshBasicMaterial;
+      planeMat.color.setHex(isDark ? 0x0f172a : 0xe2e8f0);
+    }
   }, []);
 
   useEffect(() => {
@@ -51,12 +95,16 @@ export default function BackgroundCanvas() {
     camera.position.z = 50;
     camera.position.y = 10;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const isMobile = isMobileViewport();
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isMobile });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Cap mobile DPR at 1 to keep the fragment-shading cost manageable; desktop
+    // gets up to DPR 2 for crisp particles on Retina/4K.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
     container.appendChild(renderer.domElement);
 
-    const count = 1500;
+    const count = isMobile ? 400 : 1500;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const scales = new Float32Array(count);
@@ -83,7 +131,7 @@ export default function BackgroundCanvas() {
     });
 
     const geometry2 = new THREE.BufferGeometry();
-    const count2 = 500;
+    const count2 = isMobile ? 150 : 500;
     const positions2 = new Float32Array(count2 * 3);
     for (let i = 0; i < count2; i++) {
       positions2[i * 3] = (Math.random() - 0.5) * 150;
@@ -104,17 +152,24 @@ export default function BackgroundCanvas() {
     scene.add(particles);
     scene.add(particles2);
 
-    const planeGeo = new THREE.PlaneGeometry(200, 200, 40, 40);
-    const planeMat = new THREE.MeshBasicMaterial({
-      color: isDark ? 0x0f172a : 0xe2e8f0,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.05,
-    });
-    const plane = new THREE.Mesh(planeGeo, planeMat);
-    plane.rotation.x = -Math.PI / 2;
-    plane.position.y = -10;
-    scene.add(plane);
+    // The wireframe plane is desktop-only — a 40×40 segmented mesh costs 1,681
+    // wireframe lines per frame that aren't worth their visual weight on phones.
+    let plane: THREE.Mesh | null = null;
+    let planeGeo: THREE.PlaneGeometry | null = null;
+    let planeMat: THREE.MeshBasicMaterial | null = null;
+    if (!isMobile) {
+      planeGeo = new THREE.PlaneGeometry(200, 200, 40, 40);
+      planeMat = new THREE.MeshBasicMaterial({
+        color: isDark ? 0x0f172a : 0xe2e8f0,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.05,
+      });
+      plane = new THREE.Mesh(planeGeo, planeMat);
+      plane.rotation.x = -Math.PI / 2;
+      plane.position.y = -10;
+      scene.add(plane);
+    }
 
     const state = {
       scene,
@@ -147,8 +202,8 @@ export default function BackgroundCanvas() {
       material.dispose();
       geometry2.dispose();
       material2.dispose();
-      planeGeo.dispose();
-      planeMat.dispose();
+      planeGeo?.dispose();
+      planeMat?.dispose();
       renderer.dispose();
     };
     // Only run once on mount, theme changes handled separately
@@ -164,10 +219,15 @@ export default function BackgroundCanvas() {
     if (!s) return;
 
     let running = true;
+    let documentHidden = typeof document !== "undefined" && document.hidden;
 
     function animate() {
       if (!running || !sceneRef.current) return;
       sceneRef.current.animationId = requestAnimationFrame(animate);
+
+      // Pause work when the tab is backgrounded — no animation math, no draw.
+      // The rAF loop itself is throttled by the browser when hidden anyway.
+      if (documentHidden) return;
 
       if (isAnimationEnabled) {
         sceneRef.current.time += 0.001;
@@ -190,10 +250,16 @@ export default function BackgroundCanvas() {
       sceneRef.current.renderer.render(sceneRef.current.scene, sceneRef.current.camera);
     }
 
+    const onVisibilityChange = () => {
+      documentHidden = document.hidden;
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     animate();
 
     return () => {
       running = false;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       if (sceneRef.current) {
         cancelAnimationFrame(sceneRef.current.animationId);
       }
