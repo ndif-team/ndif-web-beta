@@ -312,7 +312,7 @@ function ModelCard({ model: m }: { model: CombinedModel }) {
         )}
 
         {pilot && (
-          <span className="text-xs font-medium text-accent-600 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/30 px-2 py-0.5 rounded-full">
+          <span className="text-xs font-medium text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 px-2 py-0.5 rounded-full">
             Pilot Only
           </span>
         )}
@@ -431,7 +431,7 @@ export default function ModelList({
               <button
                 key={level}
                 onClick={() => setFilter(level)}
-                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full transition-colors ${chipStyle}`}
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-surface-950 ${chipStyle}`}
                 aria-pressed={active}
               >
                 {level}

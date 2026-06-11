@@ -68,7 +68,7 @@ export default function GetStarted() {
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8" staggerDelay={0.15}>
           {steps.map((step) => (
             <StaggerItem key={step.number}>
-              <div className="relative p-8 rounded-2xl bg-slate-50/80 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-600/50 h-full flex flex-col focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 focus-visible:outline-none">
+              <div className="card-spotlight relative p-8 rounded-2xl surface-glass border border-slate-200/80 dark:border-slate-600/50 h-full flex flex-col focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 focus-visible:outline-none">
                 <span className="text-5xl font-bold font-display text-slate-200 dark:text-slate-700 select-none absolute top-4 right-6">
                   {step.number}
                 </span>
@@ -105,7 +105,7 @@ export default function GetStarted() {
         <AnimateOnScroll className="text-center mt-12" delay={0.3}>
           <Link
             href="/get-started"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-lg hover:opacity-90 transition-all hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-lg transition-all hover:-translate-y-0.5 hover:shadow-lg"
           >
             Full Setup Guide
             <span aria-hidden="true">&rarr;</span>
